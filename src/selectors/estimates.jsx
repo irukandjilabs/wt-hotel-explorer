@@ -6,6 +6,7 @@ export function getCurrent(state) {
   return state.estimates.current;
 }
 
-export function getGuestData(state) {
-  return state.estimates.guestData;
-}
+export default {
+  getCurrentByHotelId,
+  getCurrent,
+};
