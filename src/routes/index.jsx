@@ -6,7 +6,7 @@ import {
 } from 'redux';
 import thunk from 'redux-thunk';
 import { Redirect } from 'react-router';
-import createHistory from 'history/createBrowserHistory';
+import { createBrowserHistory } from 'history';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { Route, Switch } from 'react-router-dom';
 
@@ -38,16 +38,17 @@ const LoadableHome = Loadable({
 const Handle404 = () => <Redirect to="/error-page" />;
 
 // Setup redux
-const history = createHistory();
+const history = createBrowserHistory();
 const routerMiddlewareInst = routerMiddleware(history);
 
 const middleware = [thunk, routerMiddlewareInst];
 const composeEnhancers = (process.env.NODE_ENV === 'development' && window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose; // eslint-disable-line
 const store = (() => {
   const basicStore = createStore(
-    connectRouter(history)(combineReducers({
+    combineReducers({
+      router: connectRouter(history),
       ...reducers,
-    })),
+    }),
     composeEnhancers(applyMiddleware(...middleware)),
   );
 
