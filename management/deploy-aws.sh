@@ -12,8 +12,16 @@ AWS_REGION="eu-west-1"
 LATEST_TAG=`git describe --abbrev=0 --tags`
 
 TASK_DEF="[{\"portMappings\": [{\"hostPort\": 0,\"protocol\": \"tcp\",\"containerPort\": 5000}],
+   \"logConfiguration\": {
+        \"logDriver\": \"awslogs\",
+        \"options\": {
+          \"awslogs-group\": \"shared-docker-cluster-t3\",
+          \"awslogs-region\": \"$AWS_REGION\",
+          \"awslogs-stream-prefix\": \"$ENVIRONMENT-wt-hotel-explorer\"
+        }
+      },
     \"environment\": [],
-    \"image\": \"029479441096.dkr.ecr.eu-west-1.amazonaws.com/wt-hotel-explorer:$LATEST_TAG-$ENVIRONMENT\",
+    \"image\": \"029479441096.dkr.ecr.$AWS_REGION.amazonaws.com/wt-hotel-explorer:$LATEST_TAG-$ENVIRONMENT\",
     \"name\": \"wt-hotel-explorer\",
     \"memoryReservation\": 64,
     \"cpu\": 0
