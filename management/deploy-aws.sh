@@ -11,7 +11,7 @@ AWS_REGION="eu-west-1"
 # container setup options
 LATEST_TAG=`git describe --abbrev=0 --tags`
 
-TASK_DEF="[{\"portMappings\": [{\"hostPort\": 0,\"protocol\": \"tcp\",\"containerPort\": 5000}],
+TASK_DEF="[{\"portMappings\": [{\"hostPort\": 0,\"protocol\": \"tcp\",\"containerPort\": 8080}],
    \"logConfiguration\": {
         \"logDriver\": \"awslogs\",
         \"options\": {
