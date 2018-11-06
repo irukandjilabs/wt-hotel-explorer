@@ -9,7 +9,7 @@
     "coverage": "cat coverage/lcov.info | coveralls",
     "start": "NODE_ENV=development GIT_REV=`git rev-parse --short HEAD` WT_READ_API=https://playground-api.windingtree.com ./node_modules/.bin/webpack-dev-server --host 0.0.0.0 --disable-host-check",
     "build": "NODE_ENV=production ./node_modules/.bin/webpack --mode=production",
-    "docker-start": "serve --single ./public",
+    "docker-start": "./node_modules/.bin/http-server ./public",
     "deploy-aws-playground": "./management/deploy-aws.sh playground",
     "deploy-aws-demo": "./management/deploy-aws.sh demo",
     "build-for-swarm-playground": "NODE_ENV=production GIT_REV=$TRAVIS_COMMIT HASH_ROUTED_BUILD=1 WT_READ_API='https://playground-api.windingtree.com' ./node_modules/.bin/webpack --mode=production"
@@ -80,6 +80,7 @@
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^2.0.0",
     "html-webpack-plugin": "^3.2.0",
+    "http-server": "^0.11.1",
     "jest": "^23.5.0",
     "mini-css-extract-plugin": "^0.4.1",
     "node-sass": "^4.9.2",
@@ -91,14 +92,12 @@
     "react-test-renderer": "^16.5.0",
     "rimraf": "^2.6.2",
     "sass-loader": "^7.0.3",
-    "serve": "^10.0.0",
     "style-loader": "^0.23.0",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "webpack": "^4.16.1",
     "webpack-bundle-analyzer": "^3.0.2",
     "webpack-cli": "^3.0.8",
-    "webpack-dev-server": "^3.1.4",
-    "webpack-serve": "^2.0.2"
+    "webpack-dev-server": "^3.1.4"
   },
   "jest": {
     "testRegex": "./test/.*.spec.jsx",

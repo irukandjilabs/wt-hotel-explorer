@@ -16,4 +16,4 @@ RUN npm run build
 
 CMD ["npm", "run", "docker-start"]
 
-EXPOSE 5000
+EXPOSE 8080

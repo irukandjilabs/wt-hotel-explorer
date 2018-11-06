@@ -25,7 +25,7 @@ change the `WT_READ_API` environment variable.
 
 ```sh
 $ docker build --build-arg NODE_ENV=production --build-arg GIT_REV=`git rev-parse --short HEAD` --build-arg WT_READ_API=https://playground-api.windingtree.com  -t windingtree/wt-hotel-explorer .
-$ docker run -p 8080:5000 windingtree/wt-hotel-explorer
+$ docker run -p 8080:8080 windingtree/wt-hotel-explorer
 ```
 
 In a similar fashion, you can build and run the docker image in a production-like
