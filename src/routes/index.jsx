@@ -6,7 +6,7 @@ import {
 } from 'redux';
 import thunk from 'redux-thunk';
 import { Redirect } from 'react-router';
-import createHistory from 'history/createBrowserHistory';
+import { createBrowserHistory } from 'history';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { Route, Switch } from 'react-router-dom';
 
@@ -38,36 +38,54 @@ const LoadableHome = Loadable({
 const Handle404 = () => <Redirect to="/error-page" />;
 
 // Setup redux
-const history = createHistory();
+const history = createBrowserHistory();
 const routerMiddlewareInst = routerMiddleware(history);
 
 const middleware = [thunk, routerMiddlewareInst];
 const composeEnhancers = (process.env.NODE_ENV === 'development' && window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose; // eslint-disable-line
-const store = createStore(
-  connectRouter(history)(combineReducers({
-    ...reducers,
-  })),
-  composeEnhancers(applyMiddleware(...middleware)),
-);
+const store = (() => {
+  const basicStore = createStore(
+    combineReducers({
+      router: connectRouter(history),
+      ...reducers,
+    }),
+    composeEnhancers(applyMiddleware(...middleware)),
+  );
 
+  if (module.hot) {
+    // Enable Webpack hot module replacement for reducers
+    module.hot.accept('../reducers', () => {
+      // eslint-disable-next-line global-require
+      const nextRootReducer = require('../reducers');
+      basicStore.replaceReducer(nextRootReducer);
+    });
+  }
+
+  return basicStore;
+})();
 
 // App itself
-const AppContainer = () => (
-  <React.Fragment>
-    <Header />
-    <div id="app-content" role="main">
-      <div className="container">
-        <Disclaimer />
-        <Switch>
-          <Route exact path="/hotels/:hotelId" component={Hotel} />
-          <Route exact path="/error-page" component={ErrorPage} />
-          <Route exact path="/" component={LoadableHome} />
-          <Route component={Handle404} />
-        </Switch>
+const AppContainer = () => {
+  const routes = (
+    <Switch>
+      <Route exact path="/hotels/:hotelId" component={Hotel} />
+      <Route exact path="/error-page" component={ErrorPage} />
+      <Route exact path="/" component={LoadableHome} />
+      <Route component={Handle404} />
+    </Switch>
+  );
+  return (
+    <React.Fragment>
+      <Header />
+      <div id="app-content" role="main">
+        <div className="container">
+          <Disclaimer />
+          {routes}
+        </div>
       </div>
-    </div>
-    <Footer />
-  </React.Fragment>
-);
+      <Footer />
+    </React.Fragment>
+  );
+};
 
 export default hot(module)(createApp({ store, history, AppContainer }));
