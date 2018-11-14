@@ -9,7 +9,7 @@ const defaultState = {
   guest: {
     arrival: defaultArrival.format('YYYY-MM-DD'),
     departure: defaultDeparture.format('YYYY-MM-DD'),
-    guestAges: [],
+    guests: [],
     helpers: {
       numberOfGuests: 0,
       lengthOfStay: defaultDeparture.diff(defaultArrival, 'days'),
@@ -26,16 +26,18 @@ const reducer = (state = defaultState, action) => {
   let lengthOfStay;
   let numberOfGuests;
   let updatedHotel;
-  let roomType;
+  let guests;
   switch (action.type) {
     case 'SET_GUEST_DATA':
       arrivalDateDayjs = dayjs(action.payload.arrival);
       departureDateDayjs = dayjs(action.payload.departure);
       lengthOfStay = departureDateDayjs.diff(arrivalDateDayjs, 'days');
-      numberOfGuests = action.payload.guestAges.length;
+      guests = action.payload.guests ? action.payload.guests.map((g, i) => Object.assign(g, { id: `guest-${i}` })) : [];
+      numberOfGuests = guests.length;
       return Object.assign({}, state, {
         guest: {
           ...action.payload,
+          guests,
           helpers: {
             numberOfGuests,
             lengthOfStay,
@@ -47,11 +49,11 @@ const reducer = (state = defaultState, action) => {
     case 'ADD_ROOM_TYPE':
       updatedHotel = state.hotel && state.hotel.id === action.payload.hotelId ? state.hotel : {
         id: action.payload.hotelId,
-        roomTypes: {},
+        rooms: [],
       };
-      roomType = updatedHotel.roomTypes[action.payload.roomTypeId] || {};
-      updatedHotel.roomTypes[action.payload.roomTypeId] = Object.assign({}, roomType, {
-        quantity: roomType.quantity ? roomType.quantity + 1 : 1,
+      updatedHotel.rooms.push({
+        id: action.payload.roomTypeId,
+        guests: [],
       });
       return Object.assign({}, state, {
         hotel: updatedHotel,

@@ -5,7 +5,7 @@ import { Link, withRouter } from 'react-router-dom';
 const Header = (props) => {
   const { location } = props;
   const showBrowseHotels = /hotels\/.+/.test(location.pathname);
-  const showGetEstimates = /booking\/.+/.test(location.pathname);
+  const showGetEstimates = !(/booking(\/.)*/.test(location.pathname));
   return (
     <div id="app-header">
       <nav className="navbar navbar-expand-xl navbar-light" id="navbar">

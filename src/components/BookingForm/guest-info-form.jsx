@@ -4,16 +4,14 @@ import {
   Field,
 } from 'formik';
 
-
-// TODO deal with adding/removing people
 const GuestInfoForm = ({
   form,
 }) => (
   <React.Fragment>
-    {form.values.people && form.values.people.map((person, index) => (
-      <div className="form-row mb-1" key={`person.${person.id}`}>
+    {form.values.booking.guestInfo && form.values.booking.guestInfo.map((guest, index) => (
+      <div className="form-row mb-1" key={`guest.${guest.id}`}>
         <div className="col-md-3">
-          <label htmlFor={`person.${person.id}.name`} className="col-form-label">
+          <label htmlFor={`booking.guestInfo.${index}.name`} className="col-form-label">
             Guest #
             {index + 1}
           </label>
@@ -24,8 +22,8 @@ const GuestInfoForm = ({
             aria-label="Name"
             type="text"
             className="form-control"
-            name={`people.${index}.name`}
-            id={`people.${index}.name`}
+            name={`booking.guestInfo.${index}.name`}
+            id={`booking.guestInfo.${index}.name`}
             min="0"
           />
         </div>
@@ -35,8 +33,8 @@ const GuestInfoForm = ({
             aria-label="Surname"
             type="text"
             className="form-control"
-            name={`people.${index}.surname`}
-            id={`people.${index}.surname`}
+            name={`booking.guestInfo.${index}.surname`}
+            id={`booking.guestInfo.${index}.surname`}
             min="0"
           />
         </div>
@@ -46,8 +44,8 @@ const GuestInfoForm = ({
             aria-label="Age"
             type="number"
             className="form-control"
-            name={`people.${index}.age`}
-            id={`people.${index}.age`}
+            name={`booking.guestInfo.${index}.age`}
+            id={`booking.guestInfo.${index}.age`}
             min="0"
           />
         </div>

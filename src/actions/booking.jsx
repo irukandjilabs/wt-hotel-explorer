@@ -1,10 +1,10 @@
-export const setGuestData = ({ arrival, departure, guestAges }) => (dispatch) => {
+export const setGuestData = ({ arrival, departure, guests }) => (dispatch) => {
   dispatch({
     type: 'SET_GUEST_DATA',
     payload: {
       arrival,
       departure,
-      guestAges,
+      guests,
     },
   });
 };

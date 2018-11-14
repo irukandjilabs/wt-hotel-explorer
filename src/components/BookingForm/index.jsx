@@ -7,21 +7,20 @@ import {
 
 import HotelInfoBox from '../HotelInfoBox';
 import GuestInfoForm from './guest-info-form';
-import ContactForm from './contact-form';
+import CustomerForm from './customer-form';
 import RoomType from './room-type';
 
 // TODO on change reflect to state guestData
 const BookingForm = ({ hotel, guestData, hotelBookingData }) => {
-  // TODO refactor booking state into a similar shape
   const initialValues = {
-    dates: {
+    booking: {
       arrival: guestData.arrival,
       departure: guestData.departure,
+      guestInfo: guestData.guests,
+      rooms: hotelBookingData.rooms,
     },
-    people: [],
-    rooms: [],
     note: '',
-    contact: {
+    customer: {
       name: '',
       surname: '',
       email: '',
@@ -36,28 +35,6 @@ const BookingForm = ({ hotel, guestData, hotelBookingData }) => {
       },
     },
   };
-  initialValues.people = guestData.guestAges.map((age, i) => ({
-    id: `guest-${i}`,
-    name: '',
-    surname: '',
-    age,
-  }));
-  /* eslint-disable-next-line array-callback-return */
-  Object.keys(hotelBookingData.roomTypes).map((roomTypeId) => {
-    if (!hotelBookingData.roomTypes[roomTypeId].quantity) {
-      initialValues.rooms.push({
-        id: roomTypeId,
-        guests: [],
-      });
-    } else {
-      for (let i = 0; i < hotelBookingData.roomTypes[roomTypeId].quantity; i += 1) {
-        initialValues.rooms.push({
-          id: roomTypeId,
-          guests: [],
-        });
-      }
-    }
-  });
 
   // TODO
   const validate = (values) => {
@@ -65,25 +42,26 @@ const BookingForm = ({ hotel, guestData, hotelBookingData }) => {
     const errors = {
       dates: {},
     };
-    const normalizedArrival = dayjs(values.dates.arrival);
-    const normalizedDeparture = dayjs(values.dates.departure);
+    const normalizedArrival = dayjs(values.booking.arrival);
+    const normalizedDeparture = dayjs(values.booking.departure);
     if (!normalizedArrival.isValid()) {
-      errors.dates.arrival = 'Invalid arrival date!';
+      errors.booking.arrival = 'Invalid arrival date!';
     }
     if (!normalizedDeparture.isValid()) {
-      errors.dates.departure = 'Invalid departure date!';
+      errors.booking.departure = 'Invalid departure date!';
     }
     // arrival has to be before departure
     if (normalizedArrival.isValid()
         && normalizedDeparture.isValid()
         && normalizedArrival.isAfter(normalizedDeparture)) {
-      errors.dates.arrival = 'Arrival has to be before departure!';
+      errors.booking.arrival = 'Arrival has to be before departure!';
     }
     return errors;
   };
 
   // TODO
   const doSubmit = (values) => {
+    // add hotelId, pricing data
     console.log(values);
   };
 
@@ -113,28 +91,28 @@ Booking of
               <div className="col-md-12">
                 <div className="card">
                   <div className="card-body">
-                    <RoomType roomType={hotel.roomTypes[values.rooms[0].id]} />
+                    <RoomType roomType={hotel.roomTypes[values.booking.rooms[0].id]} />
                   </div>
                 </div>
                 <div className="card">
                   <div className="card-body">
                     <h4 className="h4 mb-1">Guest information</h4>
                     <FieldArray
-                      name="people"
+                      name="booking.guestInfo"
                       component={GuestInfoForm}
                     />
-                    {errors.people && touched.people
-                    && (
-                    <small className="text-danger ml-1">
-                      {errors.people}
-                    </small>
+                    {errors.booking && errors.booking.guestInfo
+                      && touched.booking && touched.booking.guestInfo && (
+                      <small className="text-danger ml-1">
+                        {errors.booking.guestInfo}
+                      </small>
                     )}
                   </div>
                 </div>
                 <div className="card">
                   <div className="card-body">
                     <h4 className="h4 mb-1">Contact</h4>
-                    <ContactForm errors={errors} touched={touched} />
+                    <CustomerForm errors={errors} touched={touched} />
                   </div>
                 </div>
                 <div className="card">
@@ -158,7 +136,7 @@ Booking of
                         Date of arrival
                       </div>
                       <div className="col">
-                        <strong>{values.dates.arrival}</strong>
+                        <strong>{values.booking.arrival}</strong>
                       </div>
                     </div>
                     <div className="form-row mb-1">
@@ -166,7 +144,7 @@ Booking of
                         Date of departure
                       </div>
                       <div className="col">
-                        <strong>{values.dates.departure}</strong>
+                        <strong>{values.booking.departure}</strong>
                       </div>
                     </div>
                     <div className="form-row mb-1">

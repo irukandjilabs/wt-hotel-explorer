@@ -13,7 +13,7 @@ describe('services.pricing-algorithm.rate-plans', () => {
     guestData = {
       arrival: '2018-01-03',
       departure: '2018-01-05',
-      guestAges: [18],
+      guests: [{ age: 18 }],
       helpers: {
         arrivalDateDayjs: dayjs('2018-01-03'),
         departureDateDayjs: dayjs('2018-01-05'),
@@ -139,7 +139,7 @@ describe('services.pricing-algorithm.rate-plans', () => {
         currentGuestData = {
           arrival: dayjs(today).add(5, 'days').format('YYYY-MM-DD'),
           departure: dayjs(today).add(7, 'days').format('YYYY-MM-DD'),
-          guestAges: [18],
+          guests: [{ age: 18 }],
           helpers: {
             arrivalDateDayjs: dayjs(today).add(5, 'days'),
             departureDateDayjs: dayjs(today).add(7, 'days'),
@@ -273,7 +273,7 @@ describe('services.pricing-algorithm.rate-plans', () => {
   describe('selectApplicableModifiers', () => {
     it('should drop modifiers without conditions', () => {
       const modifiers = selectApplicableModifiers(
-        { guestAges: [18], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
+        { guests: [{ age: 18 }], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
         [
           { adjustment: 10 },
         ], dayjs('2018-09-12'),
@@ -283,7 +283,7 @@ describe('services.pricing-algorithm.rate-plans', () => {
 
     it('should pass through guest specific modifiers', () => {
       const modifiers = selectApplicableModifiers(
-        { guestAges: [18], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
+        { guests: [{ age: 18 }], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
         [
           { adjustment: -25, conditions: { maxAge: 10 } },
           { adjustment: -33, conditions: { maxAge: 12 } },
@@ -295,7 +295,7 @@ describe('services.pricing-algorithm.rate-plans', () => {
     describe('time interval from, to', () => {
       it('should keep modifiers if date is within interval', () => {
         const modifiers = selectApplicableModifiers(
-          { guestAges: [18], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
+          { guests: [{ age: 18 }], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
           [
             {
               adjustment: -25,
@@ -311,7 +311,7 @@ describe('services.pricing-algorithm.rate-plans', () => {
 
       it('should keep modifier starting on a stay date', () => {
         const modifiers = selectApplicableModifiers(
-          { guestAges: [18], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
+          { guests: [{ age: 18 }], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
           [
             {
               adjustment: -25,
@@ -327,7 +327,7 @@ describe('services.pricing-algorithm.rate-plans', () => {
 
       it('should keep modifier ending on a stay date', () => {
         const modifiers = selectApplicableModifiers(
-          { guestAges: [18], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
+          { guests: [{ age: 18 }], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
           [
             {
               adjustment: -25,
@@ -343,7 +343,7 @@ describe('services.pricing-algorithm.rate-plans', () => {
 
       it('should drop modidifer if stay date is not within interval', () => {
         const modifiers = selectApplicableModifiers(
-          { guestAges: [18], helpers: { lengthOfStay: 3, numberOfGuests: 1 } }, [
+          { guests: [{ age: 18 }], helpers: { lengthOfStay: 3, numberOfGuests: 1 } }, [
             {
               adjustment: -25,
               conditions: {
@@ -358,7 +358,7 @@ describe('services.pricing-algorithm.rate-plans', () => {
 
       it('should keep modifier if only from is set and stay date is in', () => {
         const modifiers = selectApplicableModifiers(
-          { guestAges: [18], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
+          { guests: [{ age: 18 }], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
           [
             {
               adjustment: -25,
@@ -373,7 +373,7 @@ describe('services.pricing-algorithm.rate-plans', () => {
 
       it('should drop modifier if only from is set and stay date is out', () => {
         const modifiers = selectApplicableModifiers(
-          { guestAges: [18], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
+          { guests: [{ age: 18 }], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
           [
             {
               adjustment: -25,
@@ -388,7 +388,7 @@ describe('services.pricing-algorithm.rate-plans', () => {
 
       it('should keep modifier if only to is set and stay date is in', () => {
         const modifiers = selectApplicableModifiers(
-          { guestAges: [18], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
+          { guests: [{ age: 18 }], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
           [
             {
               adjustment: -25,
@@ -403,7 +403,7 @@ describe('services.pricing-algorithm.rate-plans', () => {
 
       it('should drop modifier if only to is set and stay date is out', () => {
         const modifiers = selectApplicableModifiers(
-          { guestAges: [18], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
+          { guests: [{ age: 18 }], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
           [
             {
               adjustment: -25,
@@ -420,7 +420,7 @@ describe('services.pricing-algorithm.rate-plans', () => {
     describe('minLengthOfStay', () => {
       it('should not apply modifier if LOS is shorter', () => {
         const modifiers = selectApplicableModifiers(
-          { guestAges: [18], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
+          { guests: [{ age: 18 }], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
           [
             { adjustment: -25, conditions: { minLengthOfStay: 5 } },
           ], dayjs('2018-09-12'),
@@ -430,7 +430,7 @@ describe('services.pricing-algorithm.rate-plans', () => {
 
       it('should apply modifier if LOS is equal', () => {
         const modifiers = selectApplicableModifiers(
-          { guestAges: [18], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
+          { guests: [{ age: 18 }], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
           [
             { adjustment: -25, conditions: { minLengthOfStay: 3 } },
           ], dayjs('2018-09-12'),
@@ -440,7 +440,7 @@ describe('services.pricing-algorithm.rate-plans', () => {
 
       it('should apply modifier if LOS is longer', () => {
         const modifiers = selectApplicableModifiers(
-          { guestAges: [18], helpers: { lengthOfStay: 7, numberOfGuests: 1 } },
+          { guests: [{ age: 18 }], helpers: { lengthOfStay: 7, numberOfGuests: 1 } },
           [
             { adjustment: -25, conditions: { minLengthOfStay: 5 } },
           ], dayjs('2018-09-12'),
@@ -450,7 +450,7 @@ describe('services.pricing-algorithm.rate-plans', () => {
 
       it('should apply modifier with the biggest applicable LOS', () => {
         let modifiers = selectApplicableModifiers(
-          { guestAges: [18], helpers: { lengthOfStay: 7, numberOfGuests: 1 } },
+          { guests: [{ age: 18 }], helpers: { lengthOfStay: 7, numberOfGuests: 1 } },
           [
             { adjustment: -25, conditions: { minLengthOfStay: 5 } },
             { adjustment: -10, conditions: { minLengthOfStay: 7 } },
@@ -460,7 +460,7 @@ describe('services.pricing-algorithm.rate-plans', () => {
         expect(modifiers[0].adjustment).toBe(-10);
 
         modifiers = selectApplicableModifiers(
-          { guestAges: [18], helpers: { lengthOfStay: 7, numberOfGuests: 1 } },
+          { guests: [{ age: 18 }], helpers: { lengthOfStay: 7, numberOfGuests: 1 } },
           [
             { adjustment: -10, conditions: { minLengthOfStay: 7 } },
             { adjustment: -25, conditions: { minLengthOfStay: 5 } },
@@ -470,7 +470,7 @@ describe('services.pricing-algorithm.rate-plans', () => {
         expect(modifiers[0].adjustment).toBe(-10);
 
         modifiers = selectApplicableModifiers(
-          { guestAges: [18], helpers: { lengthOfStay: 7, numberOfGuests: 1 } },
+          { guests: [{ age: 18 }], helpers: { lengthOfStay: 7, numberOfGuests: 1 } },
           [
             { adjustment: -50, conditions: { minLengthOfStay: 6 } },
             { adjustment: -10, conditions: { minLengthOfStay: 7 } },
@@ -485,7 +485,7 @@ describe('services.pricing-algorithm.rate-plans', () => {
     describe('minOccupants', () => {
       it('should not apply modifier if number of guests is smaller', () => {
         const modifiers = selectApplicableModifiers(
-          { guestAges: [18], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
+          { guests: [{ age: 18 }], helpers: { lengthOfStay: 3, numberOfGuests: 1 } },
           [
             { adjustment: -25, conditions: { minOccupants: 5 } },
           ], dayjs('2018-09-12'),
@@ -495,7 +495,12 @@ describe('services.pricing-algorithm.rate-plans', () => {
 
       it('should apply modifier if number of guests is equal', () => {
         const modifiers = selectApplicableModifiers(
-          { guestAges: [10, 20, 30], helpers: { lengthOfStay: 3, numberOfGuests: 3 } },
+          {
+            guests: [
+              { age: 10 }, { age: 20 }, { age: 30 },
+            ],
+            helpers: { lengthOfStay: 3, numberOfGuests: 3 },
+          },
           [
             { adjustment: -25, conditions: { minOccupants: 3 } },
           ], dayjs('2018-09-12'),
@@ -506,7 +511,10 @@ describe('services.pricing-algorithm.rate-plans', () => {
       it('should apply modifier if number of guests is larger', () => {
         const modifiers = selectApplicableModifiers(
           {
-            guestAges: [9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+            guests: [
+              { age: 9 }, { age: 10 }, { age: 11 }, { age: 12 }, { age: 13 },
+              { age: 14 }, { age: 15 }, { age: 16 }, { age: 17 }, { age: 18 },
+            ],
             helpers: { lengthOfStay: 3, numberOfGuests: 10 },
           },
           [
@@ -519,7 +527,10 @@ describe('services.pricing-algorithm.rate-plans', () => {
       it('should apply modifier with the biggest applicable minOccupants', () => {
         const modifiers = selectApplicableModifiers(
           {
-            guestAges: [10, 11, 12, 13, 14, 15, 16],
+            guests: [
+              { age: 10 }, { age: 11 }, { age: 12 }, { age: 13 }, { age: 14 },
+              { age: 15 }, { age: 16 },
+            ],
             helpers: { lengthOfStay: 3, numberOfGuests: 7 },
           },
           [

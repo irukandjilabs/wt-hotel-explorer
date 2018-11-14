@@ -17,8 +17,8 @@ export const recomputeHotelEstimates = ({ id }) => (dispatch, getState) => {
     !guestData
     || !guestData.arrival
     || !guestData.departure
-    || !guestData.guestAges
-    || !guestData.guestAges.length
+    || !guestData.guests
+    || !guestData.guests.length
   ) {
     return;
   }
