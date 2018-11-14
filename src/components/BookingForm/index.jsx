@@ -6,8 +6,9 @@ import {
 } from 'formik';
 
 import HotelInfoBox from '../HotelInfoBox';
-import GuestInfoForm from './GuestInfoForm';
-import ContactForm from './ContactForm';
+import GuestInfoForm from './guest-info-form';
+import ContactForm from './contact-form';
+import RoomType from './room-type';
 
 // TODO on change reflect to state guestData
 const BookingForm = ({ hotel, guestData, hotelBookingData }) => {
@@ -19,6 +20,7 @@ const BookingForm = ({ hotel, guestData, hotelBookingData }) => {
     },
     people: [],
     rooms: [],
+    note: '',
     contact: {
       name: '',
       surname: '',
@@ -82,7 +84,7 @@ const BookingForm = ({ hotel, guestData, hotelBookingData }) => {
 
   // TODO
   const doSubmit = (values) => {
-    // console.log(values);
+    console.log(values);
   };
 
   return (
@@ -111,7 +113,7 @@ Booking of
               <div className="col-md-12">
                 <div className="card">
                   <div className="card-body">
-                    RoomType
+                    <RoomType roomType={hotel.roomTypes[values.rooms[0].id]} />
                   </div>
                 </div>
                 <div className="card">
@@ -133,6 +135,19 @@ Booking of
                   <div className="card-body">
                     <h4 className="h4 mb-1">Contact</h4>
                     <ContactForm errors={errors} touched={touched} />
+                  </div>
+                </div>
+                <div className="card">
+                  <div className="card-body">
+                    <div className="form-row mb-1">
+                      <div className="form-group col-md-12">
+                        <label htmlFor="note">
+                          <h4>Do you have something special to say? Leave us a note:</h4>
+                        </label>
+                        <Field type="text" className="form-control input-lg" name="note" id="note" component="textarea" rows="6" />
+                        {errors.note && touched.note && <small className="text-danger">{errors.note}</small>}
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className="card">

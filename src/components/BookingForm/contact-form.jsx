@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Field,
 } from 'formik';
@@ -87,15 +88,11 @@ const ContactForm = ({ errors, touched }) => (
         {errors.contact && errors.contact.address && errors.contact.address.country && touched.contact && touched.contact.address && touched.contact.address.country && <small className="text-danger">{errors.contact.address.country}</small>}
       </div>
     </div>
-    <div className="form-row mb-1">
-      <div className="form-group col-md-12">
-        <label htmlFor="contact.note">
-          <h5>Do you have something special to say? Leave us a note:</h5>
-        </label>
-        <Field type="text" className="form-control input-lg" name="contact.note" id="contact.note" component="textarea" rows="6" />
-        {errors.contact && errors.contact.phone && touched.contact && touched.contact.note && <small className="text-danger">{errors.contact.note}</small>}
-      </div>
-    </div>
   </React.Fragment>);
+
+ContactForm.propTypes = {
+  errors: PropTypes.instanceOf(Object).isRequired,
+  touched: PropTypes.instanceOf(Object).isRequired,
+};
 
 export default ContactForm;

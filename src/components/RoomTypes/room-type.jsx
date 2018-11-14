@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 import ScrollAnimation from 'react-animate-on-scroll';
-import ImageList from '../ImageList';
+import RoomTypeImageModal from '../RoomTypeImageModal';
 import AmenitiesList from '../AmenitiesList';
 import { QuantityBadge, AvailabilityBadge } from './badges';
 import imagePlaceholder from '../../assets/img/placeholder.png';
@@ -82,23 +82,7 @@ class RoomType extends React.PureComponent {
             </div>
           </ScrollAnimation>
         </div>
-
-        {/* Room type image modal */}
-        <div className="modal modal--carousel" id={`roomModal-${index + 1}`} tabIndex={`-${index + 1}`} role="dialog">
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title animated fadeIn">{roomType.name}</h5>
-                <button type="button" className="close animated fadeIn" data-dismiss="modal" aria-label="Close">
-                  <i className="mdi mdi-close" />
-                </button>
-              </div>
-              <div className="modal-body d-flex align-items-center animated fadeIn">
-                <ImageList list={roomType.images} withIndicators />
-              </div>
-            </div>
-          </div>
-        </div>
+        <RoomTypeImageModal roomType={roomType} index={index} />
       </React.Fragment>
     );
   }
