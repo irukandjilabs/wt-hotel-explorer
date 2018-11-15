@@ -17,7 +17,7 @@ const defaultState = {
       departureDateDayjs: defaultDeparture,
     },
   },
-  hotel: {},
+  hotel: {}, // rooms, cancellationFees
 };
 
 const reducer = (state = defaultState, action) => {
@@ -50,6 +50,7 @@ const reducer = (state = defaultState, action) => {
       updatedHotel = state.hotel && state.hotel.id === action.payload.hotelId ? state.hotel : {
         id: action.payload.hotelId,
         rooms: [],
+        cancellationFees: [],
       };
       updatedHotel.rooms.push({
         id: action.payload.roomTypeId,
@@ -57,6 +58,17 @@ const reducer = (state = defaultState, action) => {
       });
       return Object.assign({}, state, {
         hotel: updatedHotel,
+      });
+    case 'SET_CANCELLATION_FEES':
+      updatedHotel = state.hotel && state.hotel.id === action.payload.hotelId ? state.hotel : {
+        id: action.payload.hotelId,
+        rooms: [],
+        cancellationFees: [],
+      };
+      return Object.assign({}, state, {
+        hotel: Object.assign({}, updatedHotel, {
+          cancellationFees: action.payload.fees,
+        }),
       });
     default:
       return state;

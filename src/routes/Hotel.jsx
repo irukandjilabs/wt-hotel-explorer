@@ -92,6 +92,9 @@ export default withRouter(connect(
       dispatch(actions.booking.setGuestData(values));
       dispatch(actions.estimates.recomputeAllPrices(values));
     },
-    handleBookRoomTypeClicked: values => dispatch(actions.booking.addRoomType(values)),
+    handleBookRoomTypeClicked: (values) => {
+      dispatch(actions.booking.addRoomType(values));
+      dispatch(actions.booking.determineCancellationFees(values));
+    },
   }),
 )(Hotel));

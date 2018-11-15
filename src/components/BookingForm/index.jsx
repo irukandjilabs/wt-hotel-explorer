@@ -10,8 +10,6 @@ import GuestInfoForm from './guest-info-form';
 import CustomerForm from './customer-form';
 import CancellationTerms from './cancellation-terms';
 import RoomType from './room-type';
-// TODO move to an action somewhere
-import { computeCancellationFees } from '../../services/cancellation-fees';
 
 const BookingForm = ({
   hotel, guestData, hotelBookingData, estimates,
@@ -40,12 +38,6 @@ const BookingForm = ({
     },
   };
   const firstRoomEstimate = estimates.find(x => x.id === initialValues.booking.rooms[0].id);
-  const cancellationFees = computeCancellationFees(
-    dayjs(),
-    dayjs(initialValues.booking.arrival),
-    hotel.cancellationPolicies,
-    hotel.defaultCancellationAmount,
-  );
 
   // TODO don't allow booking in the past
   // TODO improve validation of phone, email and other fields
@@ -75,9 +67,9 @@ const BookingForm = ({
     const result = Object.assign({}, values, {
       hotelId: hotel.id,
       pricing: {
-        currency: firstRoomEstimate.price,
-        total: firstRoomEstimate.currency,
-        cancellationFees,
+        currency: firstRoomEstimate.currency,
+        total: firstRoomEstimate.price,
+        cancellationFees: hotelBookingData.cancellationFees,
       },
     });
     // TODO send to bookingApi, save to redux state
@@ -137,7 +129,7 @@ Booking of
                       </div>
                       <div className="col">
                         <strong>
-                          {firstRoomEstimate.price}
+                          {firstRoomEstimate.price.format()}
                           {' '}
                           {firstRoomEstimate.currency}
                         </strong>
@@ -148,7 +140,10 @@ Booking of
                         Cancellation terms
                       </div>
                       <div className="col">
-                        <CancellationTerms fees={cancellationFees} price={firstRoomEstimate} />
+                        <CancellationTerms
+                          fees={hotelBookingData.cancellationFees}
+                          price={firstRoomEstimate}
+                        />
                       </div>
                     </div>
                   </div>

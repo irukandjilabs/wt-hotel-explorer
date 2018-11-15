@@ -5,7 +5,7 @@ const CancellationTerms = ({
   fees, price,
 }) => {
   const tableRows = fees.map(fee => (
-    <tr>
+    <tr key={`fee-${fee.from}-${fee.to}`}>
       <td>
         {fee.from}
         {' '}
