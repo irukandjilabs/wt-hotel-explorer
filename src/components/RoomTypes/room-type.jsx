@@ -70,7 +70,7 @@ class RoomType extends React.PureComponent {
                   <AmenitiesList list={roomType.amenities} />
                 </div>
               )}
-              {estimate.price && estimate.quantity > 0 && (
+              {hotel.bookingUri && estimate.price && estimate.quantity > 0 && (
                 <div className="card-footer">
                   <BookRoomButton
                     onBookRoomTypeClicked={onBookRoomTypeClicked}

@@ -16,6 +16,7 @@ const LIST_FIELDS = [
   'name',
   'description',
   'images',
+  'bookingUri',
 ];
 
 const DETAIL_FIELDS = [
