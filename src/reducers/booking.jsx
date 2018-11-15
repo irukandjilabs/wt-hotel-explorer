@@ -54,7 +54,7 @@ const reducer = (state = defaultState, action) => {
       };
       updatedHotel.rooms.push({
         id: action.payload.roomTypeId,
-        guests: [],
+        guestInfoIds: [],
       });
       return Object.assign({}, state, {
         hotel: updatedHotel,

@@ -1,5 +1,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
+import _get from 'lodash.get';
+import _set from 'lodash.set';
 import PropTypes from 'prop-types';
 import {
   Formik, Form, Field, FieldArray,
@@ -10,6 +12,15 @@ import GuestInfoForm from './guest-info-form';
 import CustomerForm from './customer-form';
 import CancellationTerms from './cancellation-terms';
 import RoomType from './room-type';
+
+const requiredFields = {
+  'customer.name': 'Name',
+  'customer.surname': 'Surname',
+  'customer.email': 'E-mail',
+  'customer.address.line1': 'First line of address',
+  'customer.address.city': 'City',
+  'customer.address.country': 'Country',
+};
 
 const BookingForm = ({
   hotel, guestData, hotelBookingData, estimates,
@@ -23,43 +34,64 @@ const BookingForm = ({
     },
     note: '',
     customer: {
-      name: '',
-      surname: '',
-      email: '',
+      name: '', // req
+      surname: '', // req
+      email: '', // req
       phone: '',
       address: {
-        line1: '',
+        line1: '', // req
         line2: '',
         postalCode: '',
-        city: '',
+        city: '', // req
         state: '',
-        country: '',
+        country: '', // req
       },
     },
   };
   const firstRoomEstimate = estimates.find(x => x.id === initialValues.booking.rooms[0].id);
+  initialValues.booking.rooms[0].guestInfoIds = initialValues.booking.guestInfo.map(g => g.id);
 
   // TODO don't allow booking in the past
-  // TODO improve validation of phone, email and other fields
   const validate = (values) => {
-    // TODO move this into a component, common code with GuestForm
-    const errors = {
-      dates: {},
-    };
+    // TODO move date validation into a component, common code with GuestForm
+    const errors = {};
     const normalizedArrival = dayjs(values.booking.arrival);
     const normalizedDeparture = dayjs(values.booking.departure);
     if (!normalizedArrival.isValid()) {
-      errors.booking.arrival = 'Invalid arrival date!';
+      _set(errors, 'booking.arrival', 'Invalid arrival date!');
     }
     if (!normalizedDeparture.isValid()) {
-      errors.booking.departure = 'Invalid departure date!';
+      _set(errors, 'booking.departure', 'Invalid departure date!');
     }
     // arrival has to be before departure
     if (normalizedArrival.isValid()
         && normalizedDeparture.isValid()
         && normalizedArrival.isAfter(normalizedDeparture)) {
-      errors.booking.arrival = 'Arrival has to be before departure!';
+      _set(errors, 'booking.arrival', 'Arrival has to be before departure!');
     }
+    // Required fields
+    const requiredKeys = Object.keys(requiredFields);
+    for (let i = 0; i < requiredKeys.length; i += 1) {
+      const val = _get(values, requiredKeys[i]);
+      if (!val) {
+        _set(errors, requiredKeys[i], `${requiredFields[requiredKeys[i]]} is required!`);
+      }
+    }
+    // email
+    if (values.customer && values.customer.email) {
+      // props to https://emailregex.com/
+      if (!/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(values.customer.email)) {
+        _set(errors, 'customer.email', 'Invalid e-mail format!');
+      }
+    }
+    // phone
+    if (values.customer && values.customer.phone) {
+      // props to https://www.regextester.com/1978
+      if (!/((?:\+|00)[17](?: |-)?|(?:\+|00)[1-9]\d{0,2}(?: |-)?|(?:\+|00)1-\d{3}(?: |-)?)?(0\d|\([0-9]{3}\)|[1-9]{0,3})(?:((?: |-)[0-9]{2}){4}|((?:[0-9]{2}){4})|((?: |-)[0-9]{3}(?: |-)[0-9]{4})|([0-9]{7}))/.test(values.customer.phone)) {
+        _set(errors, 'customer.phone', 'Invalid phone format!');
+      }
+    }
+
     return errors;
   };
 
@@ -68,7 +100,7 @@ const BookingForm = ({
       hotelId: hotel.id,
       pricing: {
         currency: firstRoomEstimate.currency,
-        total: firstRoomEstimate.price,
+        total: firstRoomEstimate.price.value,
         cancellationFees: hotelBookingData.cancellationFees,
       },
     });
