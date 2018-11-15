@@ -5,16 +5,20 @@ import { connect } from 'react-redux';
 import selectors from '../selectors';
 import BookingForm from '../components/BookingForm';
 
-const BookingWizard = ({ hotel, guestData, hotelBookingData }) => (
+const BookingWizard = ({
+  hotel, guestData, hotelBookingData, estimates,
+}) => (
   // TODO if no hotel/guestData, redirect to homepage
   <BookingForm
     guestData={guestData}
     hotelBookingData={hotelBookingData}
     hotel={hotel}
+    estimates={estimates}
   />);
 
 BookingWizard.propTypes = {
   hotel: PropTypes.instanceOf(Object).isRequired,
+  estimates: PropTypes.instanceOf(Array).isRequired,
   guestData: PropTypes.instanceOf(Object).isRequired,
   hotelBookingData: PropTypes.instanceOf(Object).isRequired,
 };
@@ -25,6 +29,7 @@ export default connect(
     const getHotelById = selectors.hotels.makeGetHotelById();
     return {
       hotel: getHotelById(state, hotelBookingData.id),
+      estimates: selectors.estimates.getCurrentByHotelId(state, hotelBookingData.id),
       guestData: selectors.booking.getGuestData(state),
       hotelBookingData,
     };

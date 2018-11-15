@@ -8,25 +8,37 @@ import {
 const CustomerForm = ({ errors, touched }) => (
   <React.Fragment>
     <div className="form-row mb-1">
-      <div className="form-group col-md-6">
+      <div className="col col-form-label col-md-3">
         <label htmlFor="customer.name">Name</label>
+      </div>
+      <div className="col">
         <Field type="text" className="form-control" name="customer.name" id="customer.name" />
         {errors.customer && errors.customer.name && touched.customer && touched.customer.name && <small className="text-danger">{errors.customer.name}</small>}
       </div>
-      <div className="form-group col-md-6">
+    </div>
+    <div className="form-row mb-1">
+      <div className="col col-form-label col-md-3">
         <label htmlFor="customer.surname">Surname</label>
+      </div>
+      <div className="col">
         <Field type="text" className="form-control" name="customer.surname" id="customer.surname" />
         {errors.customer && errors.customer.surname && touched.customer && touched.customer.surname && <small className="text-danger">{errors.customer.surname}</small>}
       </div>
     </div>
     <div className="form-row mb-1">
-      <div className="form-group col-md-6">
+      <div className="col col-form-label col-md-3">
         <label htmlFor="customer.email">E-mail</label>
+      </div>
+      <div className="col">
         <Field type="text" className="form-control" name="customer.email" id="customer.email" />
         {errors.customer && errors.customer.email && touched.customer && touched.customer.email && <small className="text-danger">{errors.customer.email}</small>}
       </div>
-      <div className="form-group col-md-6">
+    </div>
+    <div className="form-row mb-1">
+      <div className="col col-form-label col-md-3">
         <label htmlFor="customer.phone">Phone</label>
+      </div>
+      <div className="col">
         <Field type="text" className="form-control" name="customer.phone" id="customer.phone" />
         {errors.customer && errors.customer.phone && touched.customer && touched.customer.phone && <small className="text-danger">{errors.customer.phone}</small>}
       </div>
@@ -35,7 +47,7 @@ const CustomerForm = ({ errors, touched }) => (
       <h5>Invoicing address</h5>
     </div>
     <div className="form-row mb-1">
-      <div className="col col-form-label">
+      <div className="col col-form-label col-md-3">
         <label htmlFor="customer.address.line1">Line 1</label>
       </div>
       <div className="col">
@@ -44,7 +56,7 @@ const CustomerForm = ({ errors, touched }) => (
       </div>
     </div>
     <div className="form-row mb-1">
-      <div className="col col-form-label">
+      <div className="col col-form-label col-md-3">
         <label htmlFor="customer.address.line2">Line 2</label>
       </div>
       <div className="col">
@@ -53,7 +65,7 @@ const CustomerForm = ({ errors, touched }) => (
       </div>
     </div>
     <div className="form-row mb-1">
-      <div className="col col-form-label">
+      <div className="col col-form-label col-md-3">
         <label htmlFor="customer.address.postalCode">Postal code</label>
       </div>
       <div className="col">
@@ -62,7 +74,7 @@ const CustomerForm = ({ errors, touched }) => (
       </div>
     </div>
     <div className="form-row mb-1">
-      <div className="col col-form-label">
+      <div className="col col-form-label col-md-3">
         <label htmlFor="customer.address.city">City</label>
       </div>
       <div className="col">
@@ -71,7 +83,7 @@ const CustomerForm = ({ errors, touched }) => (
       </div>
     </div>
     <div className="form-row mb-1">
-      <div className="col col-form-label">
+      <div className="col col-form-label col-md-3">
         <label htmlFor="customer.address.state">State</label>
       </div>
       <div className="col">
@@ -80,7 +92,7 @@ const CustomerForm = ({ errors, touched }) => (
       </div>
     </div>
     <div className="form-row mb-1">
-      <div className="col col-form-label">
+      <div className="col col-form-label col-md-3">
         <label htmlFor="customer.address.country">Country</label>
       </div>
       <div className="col">

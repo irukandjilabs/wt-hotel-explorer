@@ -8,6 +8,17 @@ const GuestInfoForm = ({
   form,
 }) => (
   <React.Fragment>
+    <div className="form-row mb-1">
+      <div className="offset-md-3 col-md-3">
+        Name
+      </div>
+      <div className="col-md-3">
+        Surname
+      </div>
+      <div className="col-md-3">
+        Age
+      </div>
+    </div>
     {form.values.booking.guestInfo && form.values.booking.guestInfo.map((guest, index) => (
       <div className="form-row mb-1" key={`guest.${guest.id}`}>
         <div className="col-md-3">
@@ -18,7 +29,6 @@ const GuestInfoForm = ({
         </div>
         <div className="col-md-3">
           <Field
-            placeholder="Name"
             aria-label="Name"
             type="text"
             className="form-control"
@@ -29,7 +39,6 @@ const GuestInfoForm = ({
         </div>
         <div className="col-md-3">
           <Field
-            placeholder="Surname"
             aria-label="Surname"
             type="text"
             className="form-control"
@@ -40,7 +49,6 @@ const GuestInfoForm = ({
         </div>
         <div className="col-md-3">
           <Field
-            placeholder="Age"
             aria-label="Age"
             type="number"
             className="form-control"

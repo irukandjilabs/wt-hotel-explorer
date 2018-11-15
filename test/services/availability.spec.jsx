@@ -18,7 +18,7 @@ describe('services.availability', () => {
     };
   });
 
-  describe.only('enhancePricingEstimates', () => {
+  describe('enhancePricingEstimates', () => {
     it('should add undefined quantity if availability data is missing totally', () => {
       const result = enhancePricingEstimates(guestData, [{ id: 'rta' }], {});
       expect(result.length).toBe(1);

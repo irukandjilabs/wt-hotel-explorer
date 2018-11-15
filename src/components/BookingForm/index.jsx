@@ -8,10 +8,14 @@ import {
 import HotelInfoBox from '../HotelInfoBox';
 import GuestInfoForm from './guest-info-form';
 import CustomerForm from './customer-form';
+import CancellationTerms from './cancellation-terms';
 import RoomType from './room-type';
+// TODO move to an action somewhere
+import { computeCancellationFees } from '../../services/cancellation-fees';
 
-// TODO on change reflect to state guestData
-const BookingForm = ({ hotel, guestData, hotelBookingData }) => {
+const BookingForm = ({
+  hotel, guestData, hotelBookingData, estimates,
+}) => {
   const initialValues = {
     booking: {
       arrival: guestData.arrival,
@@ -35,8 +39,16 @@ const BookingForm = ({ hotel, guestData, hotelBookingData }) => {
       },
     },
   };
+  const firstRoomEstimate = estimates.find(x => x.id === initialValues.booking.rooms[0].id);
+  const cancellationFees = computeCancellationFees(
+    dayjs(),
+    dayjs(initialValues.booking.arrival),
+    hotel.cancellationPolicies,
+    hotel.defaultCancellationAmount,
+  );
 
-  // TODO
+  // TODO don't allow booking in the past
+  // TODO improve validation of phone, email and other fields
   const validate = (values) => {
     // TODO move this into a component, common code with GuestForm
     const errors = {
@@ -59,10 +71,17 @@ const BookingForm = ({ hotel, guestData, hotelBookingData }) => {
     return errors;
   };
 
-  // TODO
   const doSubmit = (values) => {
-    // add hotelId, pricing data
-    console.log(values);
+    const result = Object.assign({}, values, {
+      hotelId: hotel.id,
+      pricing: {
+        currency: firstRoomEstimate.price,
+        total: firstRoomEstimate.currency,
+        cancellationFees,
+      },
+    });
+    // TODO send to bookingApi, save to redux state
+    console.log(result);
   };
 
   return (
@@ -92,6 +111,46 @@ Booking of
                 <div className="card">
                   <div className="card-body">
                     <RoomType roomType={hotel.roomTypes[values.booking.rooms[0].id]} />
+                  </div>
+                </div>
+                <div className="card">
+                  <div className="card-body">
+                    <div className="form-row mb-1">
+                      <div className="col col-form-label col-md-3">
+                        Date of arrival
+                      </div>
+                      <div className="col">
+                        <strong>{values.booking.arrival}</strong>
+                      </div>
+                    </div>
+                    <div className="form-row mb-1">
+                      <div className="col col-form-label col-md-3">
+                        Date of departure
+                      </div>
+                      <div className="col">
+                        <strong>{values.booking.departure}</strong>
+                      </div>
+                    </div>
+                    <div className="form-row mb-1">
+                      <div className="col col-form-label col-md-3">
+                        Total price
+                      </div>
+                      <div className="col">
+                        <strong>
+                          {firstRoomEstimate.price}
+                          {' '}
+                          {firstRoomEstimate.currency}
+                        </strong>
+                      </div>
+                    </div>
+                    <div className="form-row mb-1">
+                      <div className="col col-form-label col-md-3">
+                        Cancellation terms
+                      </div>
+                      <div className="col">
+                        <CancellationTerms fees={cancellationFees} price={firstRoomEstimate} />
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className="card">
@@ -126,47 +185,6 @@ Booking of
                         {errors.note && touched.note && <small className="text-danger">{errors.note}</small>}
                       </div>
                     </div>
-                  </div>
-                </div>
-                <div className="card">
-                  <div className="card-body">
-                    <h4 className="h4 mb-1">Summary</h4>
-                    <div className="form-row mb-1">
-                      <div className="col col-form-label">
-                        Date of arrival
-                      </div>
-                      <div className="col">
-                        <strong>{values.booking.arrival}</strong>
-                      </div>
-                    </div>
-                    <div className="form-row mb-1">
-                      <div className="col col-form-label">
-                        Date of departure
-                      </div>
-                      <div className="col">
-                        <strong>{values.booking.departure}</strong>
-                      </div>
-                    </div>
-                    <div className="form-row mb-1">
-                      <div className="col col-form-label">
-                        Total price
-                      </div>
-                      <div className="col">
-                        <strong>TODO total price + currency</strong>
-                      </div>
-                    </div>
-                    <div className="form-row mb-1">
-                      <div className="col col-form-label">
-                        Cancellation terms
-                      </div>
-                      <div className="col">
-                        <strong>TODO cancellation fees</strong>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="card">
-                  <div className="card-body">
                     <div className="col-md-12 text-center">
                       <button type="submit" disabled={isSubmitting} className="btn btn-primary btn-lg">Book this!</button>
                     </div>
@@ -188,6 +206,7 @@ BookingForm.propTypes = {
   hotel: PropTypes.instanceOf(Object).isRequired,
   hotelBookingData: PropTypes.instanceOf(Object).isRequired,
   guestData: PropTypes.instanceOf(Object).isRequired,
+  estimates: PropTypes.instanceOf(Object).isRequired,
 };
 
 export default BookingForm;
