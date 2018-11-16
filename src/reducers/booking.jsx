@@ -17,34 +17,43 @@ const defaultState = {
       departureDateDayjs: defaultDeparture,
     },
   },
+  customer: {},
   hotel: {}, // rooms, cancellationFees
 };
 
 const reducer = (state = defaultState, action) => {
   let arrivalDateDayjs;
   let departureDateDayjs;
-  let lengthOfStay;
-  let numberOfGuests;
   let updatedHotel;
   let guests;
   switch (action.type) {
-    case 'SET_GUEST_DATA':
+    case 'SET_STAY_DATA':
       arrivalDateDayjs = dayjs(action.payload.arrival);
       departureDateDayjs = dayjs(action.payload.departure);
-      lengthOfStay = departureDateDayjs.diff(arrivalDateDayjs, 'days');
-      guests = action.payload.guests ? action.payload.guests.map((g, i) => Object.assign(g, { id: `guest-${i}` })) : [];
-      numberOfGuests = guests.length;
       return Object.assign({}, state, {
-        guest: {
-          ...action.payload,
-          guests,
-          helpers: {
-            numberOfGuests,
-            lengthOfStay,
+        guest: Object.assign({}, state.guest, {
+          arrival: action.payload.arrival,
+          departure: action.payload.departure,
+          helpers: Object.assign({}, state.guest.helpers, {
+            lengthOfStay: departureDateDayjs.diff(arrivalDateDayjs, 'days'),
             arrivalDateDayjs,
             departureDateDayjs,
-          },
-        },
+          }),
+        }),
+      });
+    case 'SET_GUEST_DATA':
+      guests = action.payload.guests ? action.payload.guests.map((g, i) => Object.assign({ name: '', surname: '', age: 0 }, g, { id: `guest-${i}` })) : [];
+      return Object.assign({}, state, {
+        guest: Object.assign({}, state.guest, {
+          guests,
+          helpers: Object.assign({}, state.guest.helpers, {
+            numberOfGuests: guests.length,
+          }),
+        }),
+      });
+    case 'SET_CUSTOMER':
+      return Object.assign({}, state, {
+        customer: action.payload.customer,
       });
     case 'ADD_ROOM_TYPE':
       updatedHotel = state.hotel && state.hotel.id === action.payload.hotelId ? state.hotel : {

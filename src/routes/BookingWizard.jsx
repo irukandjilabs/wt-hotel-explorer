@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
 import selectors from '../selectors';
+import actions from '../actions';
 import BookingForm from '../components/BookingForm';
 
 const BookingWizard = ({
-  hotel, guestData, hotelBookingData, estimates,
+  hotel, guestData, hotelBookingData, estimates, handleBookingFormSubmit,
 }) => (
   // TODO if no hotel/guestData, redirect to homepage
   <BookingForm
@@ -14,6 +15,7 @@ const BookingWizard = ({
     hotelBookingData={hotelBookingData}
     hotel={hotel}
     estimates={estimates}
+    handleBookingFormSubmit={handleBookingFormSubmit}
   />);
 
 BookingWizard.propTypes = {
@@ -21,6 +23,7 @@ BookingWizard.propTypes = {
   estimates: PropTypes.instanceOf(Array).isRequired,
   guestData: PropTypes.instanceOf(Object).isRequired,
   hotelBookingData: PropTypes.instanceOf(Object).isRequired,
+  handleBookingFormSubmit: PropTypes.func.isRequired,
 };
 
 export default connect(
@@ -34,7 +37,9 @@ export default connect(
       hotelBookingData,
     };
   },
-  /* state => ({
-
-  }), */
+  dispatch => ({
+    handleBookingFormSubmit: (values) => {
+      dispatch(actions.booking.submitBooking(values));
+    },
+  }),
 )(BookingWizard);

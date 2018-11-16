@@ -23,7 +23,7 @@ const requiredFields = {
 };
 
 const BookingForm = ({
-  hotel, guestData, hotelBookingData, estimates,
+  hotel, guestData, hotelBookingData, estimates, handleBookingFormSubmit,
 }) => {
   const initialValues = {
     booking: {
@@ -96,16 +96,14 @@ const BookingForm = ({
   };
 
   const doSubmit = (values) => {
-    const result = Object.assign({}, values, {
+    handleBookingFormSubmit(Object.assign({}, values, {
       hotelId: hotel.id,
       pricing: {
         currency: firstRoomEstimate.currency,
         total: firstRoomEstimate.price.value,
         cancellationFees: hotelBookingData.cancellationFees,
       },
-    });
-    // TODO send to bookingApi, save to redux state
-    console.log(result);
+    }));
   };
 
   return (
@@ -234,6 +232,7 @@ BookingForm.propTypes = {
   hotelBookingData: PropTypes.instanceOf(Object).isRequired,
   guestData: PropTypes.instanceOf(Object).isRequired,
   estimates: PropTypes.instanceOf(Object).isRequired,
+  handleBookingFormSubmit: PropTypes.func.isRequired,
 };
 
 export default BookingForm;

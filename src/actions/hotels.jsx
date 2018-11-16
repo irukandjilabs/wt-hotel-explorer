@@ -25,6 +25,7 @@ const DETAIL_FIELDS = [
   'description',
   'location',
   'images',
+  'bookingUri',
   'contacts',
   'address',
   'amenities',
