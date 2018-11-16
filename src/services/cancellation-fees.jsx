@@ -93,6 +93,8 @@ export const reduceFeeSchedule = (feeSchedule) => {
 
 export const computeCancellationFees = (todayDayjs, arrivalDayjs,
   cancellationPolicies, defaultCancellationAmount) => {
+  const todayDayjsSOD = dayjs(todayDayjs).set('hour', 0).set('minute', 0).set('second', 0);
+  const arrivalDayjsEOD = dayjs(arrivalDayjs).set('hour', 23).set('minute', 59).set('second', 59);
   // Fallback to defaultCancellationAmount
   if (!cancellationPolicies || !cancellationPolicies.length) {
     return [
@@ -104,13 +106,13 @@ export const computeCancellationFees = (todayDayjs, arrivalDayjs,
     ];
   }
   const normalizedPolicies = normalizePolicyDates(
-    todayDayjs,
-    arrivalDayjs,
+    todayDayjsSOD,
+    arrivalDayjsEOD,
     cancellationPolicies,
   );
   return reduceFeeSchedule(createFeeSchedule(
-    todayDayjs,
-    arrivalDayjs,
+    todayDayjsSOD,
+    arrivalDayjsEOD,
     normalizedPolicies,
     defaultCancellationAmount,
   ));

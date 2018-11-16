@@ -316,6 +316,20 @@ describe('services.cancellation-fees', () => {
       expect(result[0].amount).toBe(22);
     });
 
+    it('should work for random time of day', () => {
+      const t = dayjs('2018-11-16 15:34');
+      const a = dayjs('2018-11-26');
+      const result = computeCancellationFees(t, a, [
+        {
+          from: '2018-01-01', to: '2018-11-30', deadline: 200, amount: 22,
+        },
+      ], defaultCancellationAmount);
+      expect(result.length).toBe(1);
+      expect(result[0].from).toBe(t.format('YYYY-MM-DD'));
+      expect(result[0].to).toBe(a.format('YYYY-MM-DD'));
+      expect(result[0].amount).toBe(22);
+    });
+
     it('should work for a complex example', () => {
       // example taken randomly from https://github.com/windingtree/wt-booking-api/blob/ef4ff2e2a5816bba0789a44f07dff3d5f5232cf3/test/services/adapter.spec.js#L171
       const result = computeCancellationFees(dayjs('2018-12-01'), dayjs('2019-03-28'), [
