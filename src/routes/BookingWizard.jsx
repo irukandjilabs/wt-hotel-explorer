@@ -7,7 +7,7 @@ import actions from '../actions';
 import BookingForm from '../components/BookingForm';
 
 const BookingWizard = ({
-  hotel, guestData, hotelBookingData, estimates, handleBookingFormSubmit,
+  hotel, guestData, hotelBookingData, customerData, estimates, handleBookingFormSubmit,
 }) => (
   // TODO if no hotel/guestData, redirect to homepage
   <BookingForm
@@ -15,6 +15,7 @@ const BookingWizard = ({
     hotelBookingData={hotelBookingData}
     hotel={hotel}
     estimates={estimates}
+    customerData={customerData}
     handleBookingFormSubmit={handleBookingFormSubmit}
   />);
 
@@ -23,6 +24,7 @@ BookingWizard.propTypes = {
   estimates: PropTypes.instanceOf(Array).isRequired,
   guestData: PropTypes.instanceOf(Object).isRequired,
   hotelBookingData: PropTypes.instanceOf(Object).isRequired,
+  customerData: PropTypes.instanceOf(Object).isRequired,
   handleBookingFormSubmit: PropTypes.func.isRequired,
 };
 
@@ -34,6 +36,7 @@ export default connect(
       hotel: getHotelById(state, hotelBookingData.id),
       estimates: selectors.estimates.getCurrentByHotelId(state, hotelBookingData.id),
       guestData: selectors.booking.getGuestData(state),
+      customerData: selectors.booking.getCustomerData(state),
       hotelBookingData,
     };
   },

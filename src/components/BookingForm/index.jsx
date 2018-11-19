@@ -23,7 +23,7 @@ const requiredFields = {
 };
 
 const BookingForm = ({
-  hotel, guestData, hotelBookingData, estimates, handleBookingFormSubmit,
+  hotel, guestData, hotelBookingData, customerData, estimates, handleBookingFormSubmit,
 }) => {
   const initialValues = {
     booking: {
@@ -33,7 +33,7 @@ const BookingForm = ({
       rooms: hotelBookingData.rooms,
     },
     note: '',
-    customer: {
+    customer: Object.assign({
       name: '', // req
       surname: '', // req
       email: '', // req
@@ -46,7 +46,7 @@ const BookingForm = ({
         state: '',
         country: '', // req
       },
-    },
+    }, customerData),
   };
   const firstRoomEstimate = estimates.find(x => x.id === initialValues.booking.rooms[0].id);
   initialValues.booking.rooms[0].guestInfoIds = initialValues.booking.guestInfo.map(g => g.id);
@@ -230,6 +230,7 @@ Booking of
 BookingForm.propTypes = {
   hotel: PropTypes.instanceOf(Object).isRequired,
   hotelBookingData: PropTypes.instanceOf(Object).isRequired,
+  customerData: PropTypes.instanceOf(Object).isRequired,
   guestData: PropTypes.instanceOf(Object).isRequired,
   estimates: PropTypes.instanceOf(Object).isRequired,
   handleBookingFormSubmit: PropTypes.func.isRequired,
