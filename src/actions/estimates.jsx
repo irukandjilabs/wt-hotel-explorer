@@ -65,14 +65,14 @@ export const fetchAndComputeHotelEstimates = ({
 };
 
 export const recomputeAllPrices = ({
-  formActions,
+  _formActions,
 }) => (dispatch, getState) => {
   // Collect all rate plans
   const state = getState();
   const ratePlansPromises = state.hotels.list.map(h => dispatch(fetchAndComputeHotelEstimates(h)));
   // Wait for everything and enable form resubmission
   Promise.all(ratePlansPromises).then(() => {
-    formActions.setSubmitting(false);
+    _formActions.setSubmitting(false);
   });
 };
 

@@ -8,6 +8,7 @@ import {
 } from 'formik';
 
 import HotelInfoBox from '../HotelInfoBox';
+import Loader from '../Loader';
 import GuestInfoForm from './guest-info-form';
 import CustomerForm from './customer-form';
 import CancellationTerms from './cancellation-terms';
@@ -97,13 +98,17 @@ const BookingForm = ({
     return errors;
   };
 
-  const doSubmit = (values) => {
+  const doSubmit = (values, formActions) => {
     handleBookingFormSubmit(Object.assign({}, values, {
       hotelId: hotel.id,
       pricing: {
         currency: firstRoomEstimate.currency,
         total: firstRoomEstimate.price.value,
         cancellationFees: hotelBookingData.cancellationFees,
+      },
+      _formActions: {
+        setSubmitting: formActions.setSubmitting,
+        setErrors: formActions.setErrors,
       },
     }));
   };
@@ -129,100 +134,105 @@ Booking of
         {({
           isSubmitting, values, errors, touched,
         }) => (
-          <Form className="mb-2">
-            <div className="row">
-              <div className="col-md-12">
-                <div className="card">
-                  <div className="card-body">
-                    <RoomType roomType={hotel.roomTypes[values.booking.rooms[0].id]} />
-                  </div>
-                </div>
-                <div className="card">
-                  <div className="card-body">
-                    <div className="form-row mb-1">
-                      <div className="col col-form-label col-md-3">
-                        Date of arrival
-                      </div>
-                      <div className="col">
-                        <strong>{values.booking.arrival}</strong>
-                      </div>
-                    </div>
-                    <div className="form-row mb-1">
-                      <div className="col col-form-label col-md-3">
-                        Date of departure
-                      </div>
-                      <div className="col">
-                        <strong>{values.booking.departure}</strong>
-                      </div>
-                    </div>
-                    <div className="form-row mb-1">
-                      <div className="col col-form-label col-md-3">
-                        Total price
-                      </div>
-                      <div className="col">
-                        <strong>
-                          {firstRoomEstimate.price.format()}
-                          {' '}
-                          {firstRoomEstimate.currency}
-                        </strong>
-                      </div>
-                    </div>
-                    <div className="form-row mb-1">
-                      <div className="col col-form-label col-md-3">
-                        Cancellation terms
-                      </div>
-                      <div className="col">
-                        <CancellationTerms
-                          fees={hotelBookingData.cancellationFees}
-                          price={firstRoomEstimate}
-                        />
-                      </div>
+          <React.Fragment>
+            {isSubmitting && <Loader block={200} label="Submitting..." />}
+            {!isSubmitting && (
+            <Form className="mb-2">
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="card">
+                    <div className="card-body">
+                      <RoomType roomType={hotel.roomTypes[values.booking.rooms[0].id]} />
                     </div>
                   </div>
-                </div>
-                <div className="card">
-                  <div className="card-body">
-                    <h4 className="h4 mb-1">Guest information</h4>
-                    <FieldArray
-                      name="booking.guestInfo"
-                      component={GuestInfoForm}
-                    />
-                    {errors.booking && errors.booking.guestInfo
-                      && touched.booking && touched.booking.guestInfo && (
-                      <small className="text-danger ml-1">
-                        {errors.booking.guestInfo}
-                      </small>
-                    )}
-                  </div>
-                </div>
-                <div className="card">
-                  <div className="card-body">
-                    <h4 className="h4 mb-1">Contact</h4>
-                    <CustomerForm errors={errors} touched={touched} />
-                  </div>
-                </div>
-                <div className="card">
-                  <div className="card-body">
-                    <div className="form-row mb-1">
-                      <div className="form-group col-md-12">
-                        <label htmlFor="note">
-                          <h4>Do you have something special to say? Leave us a note:</h4>
-                        </label>
-                        <Field type="text" className="form-control input-lg" name="note" id="note" component="textarea" rows="6" />
-                        {errors.note && touched.note && <small className="text-danger">{errors.note}</small>}
+                  <div className="card">
+                    <div className="card-body">
+                      <div className="form-row mb-1">
+                        <div className="col col-form-label col-md-3">
+                          Date of arrival
+                        </div>
+                        <div className="col">
+                          <strong>{values.booking.arrival}</strong>
+                        </div>
+                      </div>
+                      <div className="form-row mb-1">
+                        <div className="col col-form-label col-md-3">
+                          Date of departure
+                        </div>
+                        <div className="col">
+                          <strong>{values.booking.departure}</strong>
+                        </div>
+                      </div>
+                      <div className="form-row mb-1">
+                        <div className="col col-form-label col-md-3">
+                          Total price
+                        </div>
+                        <div className="col">
+                          <strong>
+                            {firstRoomEstimate.price.format()}
+                            {' '}
+                            {firstRoomEstimate.currency}
+                          </strong>
+                        </div>
+                      </div>
+                      <div className="form-row mb-1">
+                        <div className="col col-form-label col-md-3">
+                          Cancellation terms
+                        </div>
+                        <div className="col">
+                          <CancellationTerms
+                            fees={hotelBookingData.cancellationFees}
+                            price={firstRoomEstimate}
+                          />
+                        </div>
                       </div>
                     </div>
-                    <div className="col-md-12 text-center">
-                      <button type="submit" disabled={isSubmitting} className="btn btn-primary btn-lg">Book this!</button>
+                  </div>
+                  <div className="card">
+                    <div className="card-body">
+                      <h4 className="h4 mb-1">Guest information</h4>
+                      <FieldArray
+                        name="booking.guestInfo"
+                        component={GuestInfoForm}
+                      />
+                      {errors.booking && errors.booking.guestInfo
+                        && touched.booking && touched.booking.guestInfo && (
+                        <small className="text-danger ml-1">
+                          {errors.booking.guestInfo}
+                        </small>
+                      )}
+                    </div>
+                  </div>
+                  <div className="card">
+                    <div className="card-body">
+                      <h4 className="h4 mb-1">Contact</h4>
+                      <CustomerForm errors={errors} touched={touched} />
+                    </div>
+                  </div>
+                  <div className="card">
+                    <div className="card-body">
+                      <div className="form-row mb-1">
+                        <div className="form-group col-md-12">
+                          <label htmlFor="note">
+                            <h4>Do you have something special to say? Leave us a note:</h4>
+                          </label>
+                          <Field type="text" className="form-control input-lg" name="note" id="note" component="textarea" rows="6" />
+                          {errors.note && touched.note && <small className="text-danger">{errors.note}</small>}
+                        </div>
+                      </div>
+                      <div className="col-md-12 text-center">
+                        <button type="submit" disabled={isSubmitting} className="btn btn-primary btn-lg">Book this!</button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="row">
-              <HotelInfoBox hotel={hotel} />
-            </div>
-          </Form>
+              <div className="row">
+                <HotelInfoBox hotel={hotel} />
+              </div>
+            </Form>
+            )}
+          </React.Fragment>
         )}
       </Formik>
     </React.Fragment>

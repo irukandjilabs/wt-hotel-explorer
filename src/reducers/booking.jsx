@@ -67,6 +67,9 @@ const reducer = (state = defaultState, action) => {
       });
       return Object.assign({}, state, {
         hotel: updatedHotel,
+        customer: Object.assign({}, state.customer, {
+          lastBookingId: undefined,
+        }),
       });
     case 'SET_CANCELLATION_FEES':
       updatedHotel = state.hotel && state.hotel.id === action.payload.hotelId ? state.hotel : {
@@ -77,6 +80,12 @@ const reducer = (state = defaultState, action) => {
       return Object.assign({}, state, {
         hotel: Object.assign({}, updatedHotel, {
           cancellationFees: action.payload.fees,
+        }),
+      });
+    case 'SEND_BOOKING_SUCCEEDED':
+      return Object.assign({}, state, {
+        customer: Object.assign({}, state.customer, {
+          lastBookingId: action.payload.id,
         }),
       });
     default:

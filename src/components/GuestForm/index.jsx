@@ -102,15 +102,15 @@ const GuestForm = ({ handleSubmit, initialValues }) => {
   };
 
   const doSubmit = (values, formActions) => {
-    const result = {};
-    result.guests = values.guests.map(x => Object.assign(x, { age: parseInt(x.age, 10) }));
-    result.arrival = dayjs(values.arrival).format('YYYY-MM-DD');
-    result.departure = dayjs(values.departure).format('YYYY-MM-DD');
-    result.formActions = {
-      setSubmitting: formActions.setSubmitting,
-      setErrors: formActions.setErrors,
-    };
-    handleSubmit(result);
+    handleSubmit({
+      guests: values.guests.map(x => Object.assign(x, { age: parseInt(x.age, 10) })),
+      arrival: dayjs(values.arrival).format('YYYY-MM-DD'),
+      departure: dayjs(values.departure).format('YYYY-MM-DD'),
+      _formActions: {
+        setSubmitting: formActions.setSubmitting,
+        setErrors: formActions.setErrors,
+      },
+    });
   };
   return (
     <div className="collapse" id="form-estimates">

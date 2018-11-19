@@ -5,12 +5,14 @@ import { connect } from 'react-redux';
 import selectors from '../selectors';
 import actions from '../actions';
 import BookingForm from '../components/BookingForm';
+import BookingFormSuccess from '../components/BookingFormSuccess';
 import ScrollToTopOnMount from '../components/ScrollToTopOnMount';
 
 class BookingWizard extends React.PureComponent {
-  componentWillMount() {
+  componentDidMount() {
     const {
-      hotel, guestData, hotelBookingData, customerData, estimates, history,
+      hotel, guestData, hotelBookingData, customerData,
+      estimates, history,
     } = this.props;
     if (!hotel || !guestData || !hotelBookingData || !customerData || !estimates) {
       history.push('/');
@@ -19,20 +21,33 @@ class BookingWizard extends React.PureComponent {
 
   render() {
     const {
-      hotel, guestData, hotelBookingData, customerData, estimates, handleBookingFormSubmit,
+      hotel, guestData, hotelBookingData, customerData,
+      estimates, handleBookingFormSubmit,
     } = this.props;
+
+    if (customerData.lastBookingId) {
+      return (
+        <React.Fragment>
+          <ScrollToTopOnMount />
+          <BookingFormSuccess
+            customerData={customerData}
+          />
+        </React.Fragment>
+      );
+    }
+
     return (
       <React.Fragment>
         <ScrollToTopOnMount />
         {guestData && hotel && estimates && customerData && (
-        <BookingForm
-          guestData={guestData}
-          hotelBookingData={hotelBookingData}
-          hotel={hotel}
-          estimates={estimates}
-          customerData={customerData}
-          handleBookingFormSubmit={handleBookingFormSubmit}
-        />
+          <BookingForm
+            guestData={guestData}
+            hotelBookingData={hotelBookingData}
+            hotel={hotel}
+            estimates={estimates}
+            customerData={customerData}
+            handleBookingFormSubmit={handleBookingFormSubmit}
+          />
         )}
       </React.Fragment>
     );
@@ -42,7 +57,7 @@ class BookingWizard extends React.PureComponent {
 BookingWizard.defaultProps = {
   hotel: undefined,
   guestData: undefined,
-  estimates: undefined,
+  estimates: [],
   hotelBookingData: undefined,
   customerData: undefined,
 };
