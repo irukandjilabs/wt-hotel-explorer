@@ -16,6 +16,7 @@ https.get('https://restcountries.eu/rest/v2/all', (resp) => {
         code: c.alpha2Code,
       };
     });
+    list.unshift({ name: '--', code: '' });
     console.log(JSON.stringify(list));
   });
 });

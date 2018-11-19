@@ -5,8 +5,6 @@ import {
 } from 'formik';
 import countryList from '../../assets/country-list.json';
 
-countryList.unshift({ name: '--', code: '' });
-
 const CustomerForm = ({ errors, touched }) => {
   const countries = countryList.map(c => (<option value={c.code} key={c.code}>{c.name}</option>));
   return (
@@ -53,7 +51,7 @@ const CustomerForm = ({ errors, touched }) => {
         </div>
         <div className="col">
           <Field
-            requried
+            required
             type="text"
             className={
             `form-control ${
