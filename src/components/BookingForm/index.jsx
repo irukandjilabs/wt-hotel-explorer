@@ -51,7 +51,6 @@ const BookingForm = ({
   const firstRoomEstimate = estimates.find(x => x.id === initialValues.booking.rooms[0].id);
   initialValues.booking.rooms[0].guestInfoIds = initialValues.booking.guestInfo.map(g => g.id);
 
-  // TODO don't allow booking in the past
   const validate = (values) => {
     // TODO move date validation into a component, common code with GuestForm
     const errors = {};
@@ -59,6 +58,9 @@ const BookingForm = ({
     const normalizedDeparture = dayjs(values.booking.departure);
     if (!normalizedArrival.isValid()) {
       _set(errors, 'booking.arrival', 'Invalid arrival date!');
+    }
+    if (!normalizedArrival.isAfter(dayjs())) {
+      _set(errors, 'booking.arrival', 'Arrival date has to be in the future!');
     }
     if (!normalizedDeparture.isValid()) {
       _set(errors, 'booking.departure', 'Invalid departure date!');

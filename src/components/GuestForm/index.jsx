@@ -86,6 +86,9 @@ const GuestForm = ({ handleSubmit, initialValues }) => {
     if (!normalizedArrival.isValid()) {
       errors.arrival = 'Invalid arrival date!';
     }
+    if (!normalizedArrival.isAfter(dayjs())) {
+      errors.arrival = 'Arrival date has to be in the future!';
+    }
     if (!normalizedDeparture.isValid()) {
       errors.departure = 'Invalid departure date!';
     }

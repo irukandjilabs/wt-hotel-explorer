@@ -7,30 +7,54 @@ import actions from '../actions';
 import BookingForm from '../components/BookingForm';
 import ScrollToTopOnMount from '../components/ScrollToTopOnMount';
 
-const BookingWizard = ({
-  hotel, guestData, hotelBookingData, customerData, estimates, handleBookingFormSubmit,
-}) => (
-  // TODO if no hotel/guestData, redirect to homepage
-  <React.Fragment>
-    <ScrollToTopOnMount />
-    <BookingForm
-      guestData={guestData}
-      hotelBookingData={hotelBookingData}
-      hotel={hotel}
-      estimates={estimates}
-      customerData={customerData}
-      handleBookingFormSubmit={handleBookingFormSubmit}
-    />
-  </React.Fragment>
-);
+class BookingWizard extends React.PureComponent {
+  componentWillMount() {
+    const {
+      hotel, guestData, hotelBookingData, customerData, estimates, history,
+    } = this.props;
+    if (!hotel || !guestData || !hotelBookingData || !customerData || !estimates) {
+      history.push('/');
+    }
+  }
+
+  render() {
+    const {
+      hotel, guestData, hotelBookingData, customerData, estimates, handleBookingFormSubmit,
+    } = this.props;
+    return (
+      <React.Fragment>
+        <ScrollToTopOnMount />
+        {guestData && hotel && estimates && customerData && (
+        <BookingForm
+          guestData={guestData}
+          hotelBookingData={hotelBookingData}
+          hotel={hotel}
+          estimates={estimates}
+          customerData={customerData}
+          handleBookingFormSubmit={handleBookingFormSubmit}
+        />
+        )}
+      </React.Fragment>
+    );
+  }
+}
+
+BookingWizard.defaultProps = {
+  hotel: undefined,
+  guestData: undefined,
+  estimates: undefined,
+  hotelBookingData: undefined,
+  customerData: undefined,
+};
 
 BookingWizard.propTypes = {
-  hotel: PropTypes.instanceOf(Object).isRequired,
-  estimates: PropTypes.instanceOf(Array).isRequired,
-  guestData: PropTypes.instanceOf(Object).isRequired,
-  hotelBookingData: PropTypes.instanceOf(Object).isRequired,
-  customerData: PropTypes.instanceOf(Object).isRequired,
+  hotel: PropTypes.instanceOf(Object),
+  guestData: PropTypes.instanceOf(Object),
+  estimates: PropTypes.instanceOf(Array),
+  hotelBookingData: PropTypes.instanceOf(Object),
+  customerData: PropTypes.instanceOf(Object),
   handleBookingFormSubmit: PropTypes.func.isRequired,
+  history: PropTypes.instanceOf(Object).isRequired,
 };
 
 export default connect(
