@@ -13,6 +13,7 @@ const BookingFormSuccess = ({ customerData }) => (
         <div className="alert alert-success">
           <p>
 For further communication with the hotel, please use
+            {' '}
             <strong>{customerData.lastBookingId}</strong>
             {' '}
 as a reference.
