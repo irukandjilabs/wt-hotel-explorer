@@ -5,19 +5,24 @@ import { connect } from 'react-redux';
 import selectors from '../selectors';
 import actions from '../actions';
 import BookingForm from '../components/BookingForm';
+import ScrollToTopOnMount from '../components/ScrollToTopOnMount';
 
 const BookingWizard = ({
   hotel, guestData, hotelBookingData, customerData, estimates, handleBookingFormSubmit,
 }) => (
   // TODO if no hotel/guestData, redirect to homepage
-  <BookingForm
-    guestData={guestData}
-    hotelBookingData={hotelBookingData}
-    hotel={hotel}
-    estimates={estimates}
-    customerData={customerData}
-    handleBookingFormSubmit={handleBookingFormSubmit}
-  />);
+  <React.Fragment>
+    <ScrollToTopOnMount />
+    <BookingForm
+      guestData={guestData}
+      hotelBookingData={hotelBookingData}
+      hotel={hotel}
+      estimates={estimates}
+      customerData={customerData}
+      handleBookingFormSubmit={handleBookingFormSubmit}
+    />
+  </React.Fragment>
+);
 
 BookingWizard.propTypes = {
   hotel: PropTypes.instanceOf(Object).isRequired,
