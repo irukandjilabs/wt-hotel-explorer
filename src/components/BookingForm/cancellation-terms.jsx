@@ -14,7 +14,7 @@ const CancellationTerms = ({
         {fee.to}
       </td>
       <td>
-        {price.price * (100 - fee.amount) / 100}
+        {(price.price * (100 - fee.amount) / 100).toFixed(2)}
         {' '}
         {price.currency}
         {' '}
