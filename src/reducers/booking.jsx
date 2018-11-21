@@ -61,10 +61,10 @@ const reducer = (state = defaultState, action) => {
         rooms: [],
         cancellationFees: [],
       };
-      updatedHotel.rooms.push({
+      updatedHotel.rooms = [{
         id: action.payload.roomTypeId,
         guestInfoIds: [],
-      });
+      }];
       return Object.assign({}, state, {
         hotel: updatedHotel,
         customer: Object.assign({}, state.customer, {
