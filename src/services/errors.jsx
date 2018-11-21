@@ -42,10 +42,17 @@ HttpBadGatewayError.defaultCode = 'badGatewayError';
 HttpBadGatewayError.defaultMsgShort = 'Bad gateway.';
 HttpBadGatewayError.defaultMsgLong = 'Invalid response from an upstream server.';
 
+class HttpConflictError extends HttpError {}
+HttpConflictError.status = 409;
+HttpConflictError.defaultCode = 'conflict';
+HttpConflictError.defaultMsgShort = 'Conflicting data.';
+HttpConflictError.defaultMsgLong = 'Data sent does not match with data expected.';
+
 module.exports = {
   HttpError,
   Http404Error,
   HttpBadRequestError,
   HttpInternalServerError,
   HttpBadGatewayError,
+  HttpConflictError,
 };

@@ -18,23 +18,23 @@ const GuestAgeForm = ({
         </p>
       </div>
 
-      {form.values.guestAges && form.values.guestAges.map((guestAge, index) => (
+      {form.values.guests && form.values.guests.map((guest, index) => (
         /* eslint-disable-next-line react/no-array-index-key */
-        <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={`guestAges.wrapper.${index}`}>
-          <label htmlFor={`guestAges.${index}`} className="sr-only">
+        <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={`guests.wrapper.${index}`}>
+          <label htmlFor={`guests.${index}.age`} className="sr-only">
             Age of guest #
             {index + 1}
           </label>
           {/* eslint-disable-next-line react/no-array-index-key */}
-          <div key={`guestAges.${index}`} className="mb-1">
+          <div key={`guests.${index}`} className="mb-1">
             <div className="input-group">
               <Field
                 placeholder={`Age of guest #${index + 1}`}
                 aria-label={`Age of guest #${index + 1}`}
                 type="number"
                 className={`form-control ${index !== 0 && 'border-right-0'}`}
-                name={`guestAges.${index}`}
-                id={`guestAges.${index}`}
+                name={`guests.${index}.age`}
+                id={`guests.${index}.age`}
                 min="0"
               />
               {index !== 0
@@ -52,15 +52,13 @@ const GuestAgeForm = ({
                 )}
             </div>
           </div>
-
         </div>
       ))}
     </div>
-
     <button
       type="button"
       className="btn btn-outline-dark btn-sm"
-      onClick={() => push('')}
+      onClick={() => push({ age: 0 })}
     >
         Add a guest
     </button>
@@ -77,16 +75,19 @@ const GuestForm = ({ handleSubmit, initialValues }) => {
   const validate = (values) => {
     const errors = {};
     // formats
-    if (!values.guestAges || values.guestAges.length < 1) {
-      errors.guestAges = 'We need information about at least one guest!';
+    if (!values.guests || values.guests.length < 1) {
+      errors.guests = 'We need information about at least one guest!';
     }
-    if (values.guestAges.filter(x => Number.isInteger(x)).length < 1) {
-      errors.guestAges = 'We need information about at least one guest!';
+    if (values.guests.filter(x => Number.isInteger(x.age)).length < 1) {
+      errors.guests = 'We need information about at least one guest!';
     }
     const normalizedArrival = dayjs(values.arrival);
     const normalizedDeparture = dayjs(values.departure);
     if (!normalizedArrival.isValid()) {
       errors.arrival = 'Invalid arrival date!';
+    }
+    if (!normalizedArrival.isAfter(dayjs())) {
+      errors.arrival = 'Arrival date has to be in the future!';
     }
     if (!normalizedDeparture.isValid()) {
       errors.departure = 'Invalid departure date!';
@@ -101,15 +102,15 @@ const GuestForm = ({ handleSubmit, initialValues }) => {
   };
 
   const doSubmit = (values, formActions) => {
-    const result = {};
-    result.guestAges = values.guestAges.map(x => parseInt(x, 10));
-    result.arrival = dayjs(values.arrival).format('YYYY-MM-DD');
-    result.departure = dayjs(values.departure).format('YYYY-MM-DD');
-    result.formActions = {
-      setSubmitting: formActions.setSubmitting,
-      setErrors: formActions.setErrors,
-    };
-    handleSubmit(result);
+    handleSubmit({
+      guests: values.guests.map(x => Object.assign(x, { age: parseInt(x.age, 10) })),
+      arrival: dayjs(values.arrival).format('YYYY-MM-DD'),
+      departure: dayjs(values.departure).format('YYYY-MM-DD'),
+      _formActions: {
+        setSubmitting: formActions.setSubmitting,
+        setErrors: formActions.setErrors,
+      },
+    });
   };
   return (
     <div className="collapse" id="form-estimates">
@@ -137,13 +138,13 @@ const GuestForm = ({ handleSubmit, initialValues }) => {
             <div className="form-row mb-1">
               <div className="form-group col-12">
                 <FieldArray
-                  name="guestAges"
+                  name="guests"
                   component={GuestAgeForm}
                 />
-                {errors.guestAges && touched.guestAges
+                {errors.guests && touched.guests
                   && (
                   <small className="text-danger ml-1">
-                    {errors.guestAges}
+                    {errors.guests}
                   </small>
                   )
                 }
@@ -167,7 +168,7 @@ GuestForm.defaultProps = {
   initialValues: {
     arrival: defaultArrival,
     departure: defaultDeparture,
-    guestAges: [''],
+    guests: [],
   },
 };
 

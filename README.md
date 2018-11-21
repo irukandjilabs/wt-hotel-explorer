@@ -21,7 +21,8 @@ It will be available on `http://localhost:3000`
 You can also run this app from a docker container. Please note that there is
 a handful of environment variables required for a successful build. If you want
 to run the app against a different [wt-read-api](https://github.com/windingtree/wt-read-api),
-change the `WT_READ_API` environment variable.
+change the `WT_READ_API` environment variable. Currently,
+version 0.8.x of the read api is assumed.
 
 ```sh
 $ docker build --build-arg NODE_ENV=production --build-arg GIT_REV=`git rev-parse --short HEAD` --build-arg WT_READ_API=https://playground-api.windingtree.com  -t windingtree/wt-hotel-explorer .

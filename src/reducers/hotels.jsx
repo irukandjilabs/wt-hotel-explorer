@@ -20,11 +20,11 @@ const remapErroredIds = list => list
 
 const transformAvailability = (responseData) => {
   // re-index availability by date for easier later access
-  if (responseData.availability) {
+  if (responseData.roomTypes) {
     const result = {};
-    const roomTypes = Object.keys(responseData.availability);
+    const roomTypes = Object.keys(responseData.roomTypes);
     for (let i = 0; i < roomTypes.length; i += 1) {
-      result[roomTypes[i]] = responseData.availability[roomTypes[i]]
+      result[roomTypes[i]] = responseData.roomTypes[roomTypes[i]]
         .reduce((agg, curr) => Object.assign({}, agg, {
           [curr.date]: curr,
         }), {});
