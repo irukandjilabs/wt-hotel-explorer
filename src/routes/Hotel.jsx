@@ -1,11 +1,10 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import selectors from '../selectors';
-import hotelActions from '../actions/hotels';
-import estimatesActions from '../actions/estimates';
+import actions from '../actions';
 import Loader from '../components/Loader';
 import HotelDetail from '../components/HotelDetail';
 import ScrollToTopOnMount from '../components/ScrollToTopOnMount';
@@ -13,18 +12,24 @@ import ScrollToTopOnMount from '../components/ScrollToTopOnMount';
 class Hotel extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = { shouldRedirectToError: false };
+    this.startBookingWizard = this.startBookingWizard.bind(this);
   }
 
   componentDidMount() {
-    const { fetchHotelDetail, match, hotel } = this.props;
+    const {
+      fetchHotelDetail, match, hotel, history,
+    } = this.props;
     if (!hotel || (!hotel.hasDetailLoaded && !hotel.hasDetailLoading)) {
       fetchHotelDetail({ id: match.params.hotelId }).catch(() => {
-        this.setState({
-          shouldRedirectToError: true,
-        });
+        history.push('/error-page');
       });
     }
+  }
+
+  startBookingWizard(values) {
+    const { handleBookRoomTypeClicked, history } = this.props;
+    handleBookRoomTypeClicked(values);
+    history.push('/booking');
   }
 
   render() {
@@ -32,10 +37,6 @@ class Hotel extends React.PureComponent {
       hotel, estimates, errors,
       handleGuestFormSubmit, guestFormInitialValues,
     } = this.props;
-    const { shouldRedirectToError } = this.state;
-    if (shouldRedirectToError) {
-      return <Redirect to="/error-page" />;
-    }
     return (
       <Fragment>
         <ScrollToTopOnMount />
@@ -48,6 +49,7 @@ class Hotel extends React.PureComponent {
               errors={errors}
               handleGuestFormSubmit={handleGuestFormSubmit}
               guestFormInitialValues={guestFormInitialValues}
+              handleBookRoomTypeClicked={this.startBookingWizard}
             />
           )}
       </Fragment>
@@ -69,9 +71,11 @@ Hotel.propTypes = {
   fetchHotelDetail: PropTypes.func.isRequired,
   handleGuestFormSubmit: PropTypes.func.isRequired,
   guestFormInitialValues: PropTypes.instanceOf(Object).isRequired,
+  handleBookRoomTypeClicked: PropTypes.func.isRequired,
+  history: PropTypes.instanceOf(Object).isRequired,
 };
 
-export default connect(
+export default withRouter(connect(
   (state, ownProps) => {
     const getHotelById = selectors.hotels.makeGetHotelById();
     const { hotelId } = ownProps.match.params;
@@ -79,11 +83,18 @@ export default connect(
       hotel: getHotelById(state, hotelId),
       estimates: selectors.estimates.getCurrentByHotelId(state, hotelId),
       errors: state.errors.hotels[hotelId],
-      guestFormInitialValues: selectors.estimates.getGuestData(state),
+      guestFormInitialValues: selectors.booking.getGuestData(state),
     };
   },
   dispatch => ({
-    fetchHotelDetail: id => dispatch(hotelActions.fetchHotelDetail(id)),
-    handleGuestFormSubmit: values => dispatch(estimatesActions.recomputeAllPrices(values)),
+    fetchHotelDetail: id => dispatch(actions.hotels.fetchHotelDetail(id)),
+    handleGuestFormSubmit: (values) => {
+      dispatch(actions.booking.setGuestData(values));
+      dispatch(actions.estimates.recomputeAllPrices(values));
+    },
+    handleBookRoomTypeClicked: (values) => {
+      dispatch(actions.booking.addRoomType(values));
+      dispatch(actions.booking.determineCancellationFees(values));
+    },
   }),
-)(Hotel);
+)(Hotel));
