@@ -8,7 +8,7 @@ describe('services.availability', () => {
     guestData = {
       arrival: '2018-01-03',
       departure: '2018-01-07',
-      guestAges: [18, 20],
+      guests: [{ age: 18 }, { age: 20 }],
       helpers: {
         arrivalDateDayjs: dayjs('2018-01-03'),
         departureDateDayjs: dayjs('2018-01-07'),
@@ -18,7 +18,7 @@ describe('services.availability', () => {
     };
   });
 
-  describe.only('enhancePricingEstimates', () => {
+  describe('enhancePricingEstimates', () => {
     it('should add undefined quantity if availability data is missing totally', () => {
       const result = enhancePricingEstimates(guestData, [{ id: 'rta' }], {});
       expect(result.length).toBe(1);
@@ -221,7 +221,7 @@ describe('services.availability', () => {
         const result = enhancePricingEstimates({
           arrival: '2018-08-31',
           departure: '2018-09-01',
-          guestAges: [18],
+          guests: [{ age: 18 }],
           helpers: {
             arrivalDateDayjs: dayjs('2018-08-31'),
             departureDateDayjs: dayjs('2018-09-01'),

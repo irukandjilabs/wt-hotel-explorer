@@ -17,10 +17,10 @@ export const computeDailyPrice = (guestData, dateDayjs, ratePlan) => {
   const guestPrices = [];
   let selectedModifier;
   let adjustment;
-  for (let i = 0; i < guestData.guestAges.length; i += 1) {
+  for (let i = 0; i < guestData.guests.length; i += 1) {
     adjustment = 0;
     // Pick the best modifier for each guest and adjust the price
-    selectedModifier = selectBestGuestModifier(applicableModifiers, guestData.guestAges[i]);
+    selectedModifier = selectBestGuestModifier(applicableModifiers, guestData.guests[i].age);
     if (selectedModifier) {
       adjustment = (selectedModifier.adjustment / 100) * ratePlan.price;
     }

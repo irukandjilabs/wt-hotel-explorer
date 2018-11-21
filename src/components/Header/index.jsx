@@ -5,6 +5,7 @@ import { Link, withRouter } from 'react-router-dom';
 const Header = (props) => {
   const { location } = props;
   const showBrowseHotels = /hotels\/.+/.test(location.pathname);
+  const showGetEstimates = !(/booking(\/.)*/.test(location.pathname));
   return (
     <div id="app-header">
       <nav className="navbar navbar-expand-xl navbar-light" id="navbar">
@@ -21,11 +22,14 @@ const Header = (props) => {
           </div>
           )
           }
-          <div className="ml-lg-1">
-            <button className="btn btn-block btn-primary" id="navbar-btn" type="button" data-toggle="collapse" data-target="#form-estimates" aria-expanded="false" aria-controls="form-estimates">
+          {showGetEstimates
+            && (
+            <div className="ml-lg-1">
+              <button className="btn btn-block btn-primary" id="navbar-btn" type="button" data-toggle="collapse" data-target="#form-estimates" aria-expanded="false" aria-controls="form-estimates">
               Get Estimates!
-            </button>
-          </div>
+              </button>
+            </div>
+            )}
         </div>
       </nav>
     </div>
