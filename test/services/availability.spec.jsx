@@ -56,6 +56,7 @@ describe('services.availability', () => {
               '2018-01-04': { date: '2018-01-04', quantity: 7 },
               '2018-01-05': { date: '2018-01-05', quantity: 7 },
               '2018-01-06': { date: '2018-01-06', quantity: 7 },
+              '2018-01-07': { date: '2018-01-07', quantity: 7 },
             },
           },
         },
@@ -106,7 +107,7 @@ describe('services.availability', () => {
               '2018-01-04': { date: '2018-01-04', quantity: 6 },
               '2018-01-05': { date: '2018-01-05', quantity: 5 },
               '2018-01-06': { date: '2018-01-06', quantity: 3 },
-              '2018-01-07': { date: '2018-01-07', quantity: 1 },
+              '2018-01-07': { date: '2018-01-07', quantity: 3 },
             },
             rtb: {
               '2018-01-03': { date: '2018-01-03', quantity: 17 },
@@ -121,6 +122,80 @@ describe('services.availability', () => {
       expect(result.length).toBe(2);
       expect(result.find(r => r.id === 'rta')).toHaveProperty('quantity', 3);
       expect(result.find(r => r.id === 'rtb')).toHaveProperty('quantity', 1);
+    });
+
+    describe('edge cases', () => {
+      it('should say 1 if 1 is set on a last date', () => {
+        const result = enhancePricingEstimates(guestData, [{ id: 'rta' }], {
+          availability: {
+            availability: {
+              rta: {
+                '2018-01-03': { date: '2018-01-03', quantity: 17 },
+                '2018-01-04': { date: '2018-01-04', quantity: 3 },
+                '2018-01-05': { date: '2018-01-05', quantity: 15 },
+                '2018-01-06': { date: '2018-01-06', quantity: 13 },
+                '2018-01-07': { date: '2018-01-07', quantity: 1 },
+              },
+            },
+          },
+        });
+        expect(result.length).toBe(1);
+        expect(result[0]).toHaveProperty('quantity', 1);
+      });
+
+      it('should say 1 if 1 is set on a first date', () => {
+        const result = enhancePricingEstimates(guestData, [{ id: 'rta' }], {
+          availability: {
+            availability: {
+              rta: {
+                '2018-01-03': { date: '2018-01-03', quantity: 1 },
+                '2018-01-04': { date: '2018-01-04', quantity: 3 },
+                '2018-01-05': { date: '2018-01-05', quantity: 15 },
+                '2018-01-06': { date: '2018-01-06', quantity: 13 },
+                '2018-01-07': { date: '2018-01-07', quantity: 17 },
+              },
+            },
+          },
+        });
+        expect(result.length).toBe(1);
+        expect(result[0]).toHaveProperty('quantity', 1);
+      });
+
+      it('should say 0 if 0 is set on a last date', () => {
+        const result = enhancePricingEstimates(guestData, [{ id: 'rta' }], {
+          availability: {
+            availability: {
+              rta: {
+                '2018-01-03': { date: '2018-01-03', quantity: 17 },
+                '2018-01-04': { date: '2018-01-04', quantity: 3 },
+                '2018-01-05': { date: '2018-01-05', quantity: 15 },
+                '2018-01-06': { date: '2018-01-06', quantity: 13 },
+                '2018-01-07': { date: '2018-01-07', quantity: 0 },
+              },
+            },
+          },
+        });
+        expect(result.length).toBe(1);
+        expect(result[0]).toHaveProperty('quantity', 0);
+      });
+
+      it('should say 0 if 0 is set on a first date', () => {
+        const result = enhancePricingEstimates(guestData, [{ id: 'rta' }], {
+          availability: {
+            availability: {
+              rta: {
+                '2018-01-03': { date: '2018-01-03', quantity: 0 },
+                '2018-01-04': { date: '2018-01-04', quantity: 3 },
+                '2018-01-05': { date: '2018-01-05', quantity: 15 },
+                '2018-01-06': { date: '2018-01-06', quantity: 13 },
+                '2018-01-07': { date: '2018-01-07', quantity: 17 },
+              },
+            },
+          },
+        });
+        expect(result.length).toBe(1);
+        expect(result[0]).toHaveProperty('quantity', 0);
+      });
     });
 
     describe('restrictions', () => {
@@ -139,6 +214,7 @@ describe('services.availability', () => {
                 '2018-01-04': { date: '2018-01-04', quantity: 7 },
                 '2018-01-05': { date: '2018-01-05', quantity: 7 },
                 '2018-01-06': { date: '2018-01-06', quantity: 7 },
+                '2018-01-07': { date: '2018-01-07', quantity: 7 },
               },
             },
           },
@@ -162,6 +238,7 @@ describe('services.availability', () => {
                 },
                 '2018-01-05': { date: '2018-01-05', quantity: 7 },
                 '2018-01-06': { date: '2018-01-06', quantity: 7 },
+                '2018-01-07': { date: '2018-01-07', quantity: 7 },
               },
             },
           },
@@ -209,6 +286,7 @@ describe('services.availability', () => {
                   },
                 },
                 '2018-01-06': { date: '2018-01-06', quantity: 7 },
+                '2018-01-07': { date: '2018-01-07', quantity: 7 },
               },
             },
           },
@@ -296,6 +374,7 @@ describe('services.availability', () => {
                 '2018-01-04': { date: '2018-01-04', quantity: 7 },
                 '2018-01-05': { date: '2018-01-05', quantity: 7 },
                 '2018-01-06': { date: '2018-01-06', quantity: 7 },
+                '2018-01-07': { date: '2018-01-07', quantity: 7 },
               },
             },
           },
@@ -321,6 +400,7 @@ describe('services.availability', () => {
                 '2018-01-04': { date: '2018-01-04', quantity: 7 },
                 '2018-01-05': { date: '2018-01-05', quantity: 7 },
                 '2018-01-06': { date: '2018-01-06', quantity: 7 },
+                '2018-01-07': { date: '2018-01-07', quantity: 7 },
               },
             },
           },
