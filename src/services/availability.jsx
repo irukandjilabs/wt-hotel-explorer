@@ -36,7 +36,8 @@ export const enhancePricingEstimates = (guestData, pricingData, hotel) => {
           }
           currentDate = currentDate.add(1, 'day');
         }
-        // Deal with noDeparture restriction, it's a
+        // Deal with the departure date:
+        // - noDeparture restriction, it's a
         // special one - it is applied to the date *after* the last night
         currentAvailability = indexedAvailability[currentDate.format('YYYY-MM-DD')];
         if (
@@ -45,10 +46,13 @@ export const enhancePricingEstimates = (guestData, pricingData, hotel) => {
           && currentAvailability.restrictions.noDeparture
         ) {
           dailyAvailability = [];
+        } else if (currentAvailability !== undefined) {
+          dailyAvailability.push(currentAvailability.quantity);
         }
 
         // Filter out missing data and applied restrictions
-        if (dailyAvailability.length === guestData.helpers.lengthOfStay) {
+        // +1 means the date of departure
+        if (dailyAvailability.length === guestData.helpers.lengthOfStay + 1) {
           result[i].quantity = dailyAvailability.reduce((agg, da) => {
             if (agg === undefined) {
               return da;

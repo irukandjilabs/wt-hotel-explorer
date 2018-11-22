@@ -1,6 +1,6 @@
 {
   "name": "wt-hotel-explorer",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Web app to show hotel inventory from WT api.",
   "scripts": {
     "lint": "eslint src test --ext jsx,js",
@@ -8,6 +8,7 @@
     "test": "rimraf coverage && jest --coverage",
     "coverage": "cat coverage/lcov.info | coveralls",
     "start": "NODE_ENV=development GIT_REV=`git rev-parse --short HEAD` WT_READ_API=https://playground-api.windingtree.com ./node_modules/.bin/webpack-dev-server --host 0.0.0.0 --disable-host-check",
+    "update-country-list": "node ./management/get-country-codes.js > src/assets/country-list.json",
     "build": "NODE_ENV=production ./node_modules/.bin/webpack --mode=production",
     "docker-start": "./node_modules/.bin/superstatic --debug 1 --port 8080 --host 0.0.0.0 --gzip 1 public/",
     "deploy-aws-playground": "./management/deploy-aws.sh playground",
