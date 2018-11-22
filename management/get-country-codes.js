@@ -15,6 +15,8 @@ https.get('https://restcountries.eu/rest/v2/all', (resp) => {
         name: c.name,
         code: c.alpha2Code,
       };
+    }).sort((a, b) => {
+      return a.name < b.name ? -1 : 1;
     });
     list.unshift({ name: '--', code: '' });
     console.log(JSON.stringify(list));
