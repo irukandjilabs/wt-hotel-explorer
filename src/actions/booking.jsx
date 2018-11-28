@@ -127,16 +127,20 @@ export const submitBooking = values => (dispatch, getState) => {
   }));
 };
 
-export const cancelBooking = createActionThunk('SEND_BOOKING', (values) => {
+export const cancelBooking = createActionThunk('CANCEL_BOOKING', (values) => {
   const url = `${values.bookingUri}/booking/${values.bookingId}`;
   return fetch(url, {
     method: 'DELETE',
   })
     .then((response) => {
-      if (response.status > 299) {
-        throw translateNetworkError(response.status, 'Cannot save booking!');
-      }
-      return true;
+      return response.json();
+    }).then((response) => {
+      values._formActions.finalize(response.status <= 299, response.code);
+    }, (err) => {
+      values._formActions.finalize(false, undefined);
+    })
+    .finally((response) => {
+      values._formActions.setSubmitting(false);
     });
 });
 
