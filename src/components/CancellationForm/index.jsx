@@ -40,7 +40,7 @@ const CancellationForm = ({ hotel, handleSubmit, initialValues }) => {
               msg = 'Booking has been already cancelled';
               break;
             default:
-              msg = 'Booking cannot be cancelled due to an unknown error on the hotel side.';
+              msg = 'Booking cannot be cancelled due to an unknown error.';
           }
           formActions.setErrors({
             bookingId: msg,
