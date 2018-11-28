@@ -40,6 +40,7 @@
     "react": "^16.6.3",
     "react-anchor-link-smooth-scroll": "^1.0.11",
     "react-animate-on-scroll": "^2.1.5",
+    "react-bootstrap-typeahead": "^3.2.4",
     "react-dom": "^16.6.3",
     "react-hot-loader": "^4.3.12",
     "react-leaflet": "^2.1.2",
