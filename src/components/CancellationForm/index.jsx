@@ -18,16 +18,15 @@ const CancellationForm = ({ hotel, handleSubmit, initialValues }) => {
       bookingUri: hotel.bookingUri,
       bookingId: values.bookingId,
       _formActions: {
-        setSubmitting: formActions.setSubmitting,
-        setErrors: formActions.setErrors,
         finalize: (isOk, code) => {
+          formActions.setSubmitting(false);
           if (isOk) {
             formActions.resetForm();
           } else {
             let msg;
             switch (code) {
               case '#notFound':
-                msg = 'Unknown booking reference.';
+                msg = 'Unknown booking reference. A typo, perhaps?';
                 break;
               case '#forbidden':
                 msg = 'Booking cancellation is not allowed.';

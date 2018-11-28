@@ -138,9 +138,6 @@ export const cancelBooking = createActionThunk('CANCEL_BOOKING', (values) => {
       values._formActions.finalize(response.status <= 299, response.code);
     }, (err) => {
       values._formActions.finalize(false, undefined);
-    })
-    .finally((response) => {
-      values._formActions.setSubmitting(false);
     });
 });
 
