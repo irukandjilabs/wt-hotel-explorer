@@ -69,7 +69,7 @@ export const translateNetworkError = (status, code, message) => {
   if (status === 404) {
     return new Http404Error(code, message);
   }
-  // Consider 422 as a 404
+  // Consider 422 as a 409
   if (status === 409 || status === 422) {
     return new HttpConflictError(code, message);
   }
@@ -127,9 +127,23 @@ export const submitBooking = values => (dispatch, getState) => {
   }));
 };
 
+export const cancelBooking = createActionThunk('SEND_BOOKING', (values) => {
+  const url = `${values.bookingUri}/booking/${values.bookingId}`;
+  return fetch(url, {
+    method: 'DELETE',
+  })
+    .then((response) => {
+      if (response.status > 299) {
+        throw translateNetworkError(response.status, 'Cannot save booking!');
+      }
+      return true;
+    });
+});
+
 export default {
   setGuestData,
   addRoomType,
   determineCancellationFees,
   submitBooking,
+  cancelBooking,
 };

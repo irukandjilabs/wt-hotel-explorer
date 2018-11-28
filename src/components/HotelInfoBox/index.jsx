@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 
 import ImageList from '../ImageList';
 import HotelContacts from '../HotelContacts';
+import CancellationForm from '../CancellationForm';
 import { Address, LocationMap } from '../HotelLocation';
 
-const HotelInfoBox = ({ hotel }) => (
+const HotelInfoBox = ({ hotel, handleCancellationFormSubmit }) => (
   <div className="row">
     <div className="col-md-12 bg-light rounded p-2 mt-1">
       <div className="row">
@@ -34,12 +35,19 @@ const HotelInfoBox = ({ hotel }) => (
           <HotelContacts contacts={hotel.contacts} />
         </div>
       </div>
+      <div className="row pt-1">
+        <div className="col">
+          <button type="button" className="btn btn-link" data-toggle="collapse" data-target="#form-cancellation" aria-expanded="false" aria-controls="form-cancellation">Cancel a booking?</button>
+          <CancellationForm hotel={hotel} handleSubmit={handleCancellationFormSubmit} />
+        </div>
+      </div>
     </div>
   </div>
 );
 
 HotelInfoBox.propTypes = {
   hotel: PropTypes.instanceOf(Object).isRequired,
+  handleCancellationFormSubmit: PropTypes.func.isRequired,
 };
 
 export default HotelInfoBox;
