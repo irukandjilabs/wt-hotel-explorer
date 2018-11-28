@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Loader from '../Loader';
 import { Formik, Form, Field } from 'formik';
 
-const STATUS_SUCCEEDED = 'succeeded',
-  STATUS_FAILED= 'failed';
+import Loader from '../Loader';
+
+const STATUS_SUCCEEDED = 'succeeded';
+const STATUS_FAILED = 'failed';
 
 const CancellationForm = ({ hotel, handleSubmit, initialValues }) => {
   const validate = (values) => {
@@ -20,32 +21,30 @@ const CancellationForm = ({ hotel, handleSubmit, initialValues }) => {
     handleSubmit({
       bookingUri: hotel.bookingUri,
       bookingId: values.bookingId,
-      _formActions: {
-        finalize: (isOk, code) => {
-          formActions.setSubmitting(false);
-          if (isOk) {
-            formActions.resetForm();
-            formActions.setStatus(STATUS_SUCCEEDED);
-          } else {
-            formActions.setStatus(STATUS_FAILED);
-            let msg;
-            switch (code) {
-              case '#notFound':
-                msg = 'Unknown booking reference. A typo, perhaps?';
-                break;
-              case '#forbidden':
-                msg = 'Booking cancellation is not allowed.';
-                break;
-              case '#alreadyCancelled':
-                msg = 'Booking has been already cancelled';
-                break;
-              default:
-                msg = 'Booking cannot be cancelled due to an unknown error on the hotel side.'
-            }
-            formActions.setErrors({
-              bookingId: msg,
-            })
+      finalize: (isOk, code) => {
+        formActions.setSubmitting(false);
+        if (isOk) {
+          formActions.resetForm();
+          formActions.setStatus(STATUS_SUCCEEDED);
+        } else {
+          formActions.setStatus(STATUS_FAILED);
+          let msg;
+          switch (code) {
+            case '#notFound':
+              msg = 'Unknown booking reference. A typo, perhaps?';
+              break;
+            case '#forbidden':
+              msg = 'Booking cancellation is not allowed.';
+              break;
+            case '#alreadyCancelled':
+              msg = 'Booking has been already cancelled';
+              break;
+            default:
+              msg = 'Booking cannot be cancelled due to an unknown error on the hotel side.';
           }
+          formActions.setErrors({
+            bookingId: msg,
+          });
         }
       },
     });
@@ -57,7 +56,9 @@ const CancellationForm = ({ hotel, handleSubmit, initialValues }) => {
         validate={validate}
         onSubmit={doSubmit}
       >
-        {({ isSubmitting, errors, touched, status }) => (
+        {({
+          isSubmitting, errors, touched, status,
+        }) => (
           <React.Fragment>
             {isSubmitting && <Loader block={200} label="Submitting..." />}
             {!isSubmitting && (
