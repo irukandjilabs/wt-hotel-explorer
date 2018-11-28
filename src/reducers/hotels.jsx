@@ -56,6 +56,9 @@ const reducer = (state = defaultState, action) => {
       return Object.assign({}, state, {
         hotelsLoading: true,
       });
+    case 'SEARCH_HOTELS_BY_LOCATION_SUCCEEDED':
+      // TODO make eslint calm here
+      // TODO make sure that initial fetch is done even after coming back from search
     case 'FETCH_LIST_SUCCEEDED':
       if (!action.payload.items) {
         if (action.payload.errors) {

@@ -13,7 +13,7 @@ class MapSearch extends React.PureComponent {
 
   examples = {
     cluj: {
-      centerpoint: 'Cluj-Napoca, Romania (city)',
+      centerpoint: 'Cluj-Napoca, Romania',
       centerCoords: [46.770066, 23.600819],
       radius: 30,
     },
@@ -39,12 +39,12 @@ class MapSearch extends React.PureComponent {
   }
 
   performSearch(centerCoords, radius) {
-    // TODO actually search for hotels, move submitted state to redux-based props, merge with existing hotel list
+    const { handleSearchFormSubmit } = this.props;
     this.setState({
       submittedCenterCoords: centerCoords,
-      submittedRadius: radius,
+      submittedRadius: parseInt(radius, 10),
     });
-    return Promise.resolve(true);
+    return handleSearchFormSubmit({ centerCoords, radius });
   }
 
   doSubmit(e) {
@@ -70,9 +70,10 @@ class MapSearch extends React.PureComponent {
 
   render() {
     const {
-      isSubmitting, submittedCenterCoords, submittedRadius, radius,
+      isSubmitting, submittedCenterCoords, submittedRadius, radius, centerCoords,
     } = this.state;
     const examples = Object.keys(this.examples).map(e => (<button type="button" key={e} className="btn btn-dark btn-sm mr-1" onClick={() => this.setExample(e)}>{`${this.examples[e].radius} km around ${this.examples[e].centerpoint}`}</button>));
+    const { results } = this.props;
 
     return (
       <React.Fragment>
@@ -112,6 +113,7 @@ class MapSearch extends React.PureComponent {
                   <button
                     type="submit"
                     className="btn btn-primary form-control my-1"
+                    disabled={!radius || !centerCoords}
                   >
 Search
                   </button>
@@ -127,12 +129,25 @@ Search
         </div>
         <div className="row">
           <div className="col-md-12 map-container-lg">
-            <HotelsMap centerpoint={submittedCenterCoords} radius={submittedRadius} />
+            <HotelsMap
+              centerpoint={submittedCenterCoords}
+              radius={submittedRadius}
+              hotels={results}
+            />
           </div>
         </div>
       </React.Fragment>
     );
   }
 }
+
+MapSearch.defaultProps = {
+  results: [],
+};
+
+MapSearch.propTypes = {
+  handleSearchFormSubmit: PropTypes.func.isRequired,
+  results: PropTypes.instanceOf(Array),
+};
 
 export default MapSearch;

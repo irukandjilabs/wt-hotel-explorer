@@ -32,6 +32,18 @@ export function makeGetHotelById() {
   );
 }
 
+function getIds(state, ids) {
+  return ids;
+}
+
+export function makeHotelFilterByIds() {
+  return createSelector(
+    [getHotels, getIds],
+    (hotels, ids) => ids.map(id => hotels.find(hotel => hotel.id === id)),
+  );
+}
+
+
 export default {
   getHotels,
   getNextHotel,
@@ -39,4 +51,5 @@ export default {
   isLoadingMore,
   getHotelsWithName,
   makeGetHotelById,
+  makeHotelFilterByIds,
 };

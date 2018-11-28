@@ -19,7 +19,7 @@ import {
   Header, Footer, Disclaimer, Loader,
 } from '../components';
 
-// The folloing import path is interpreted by webpack
+// The following import path is interpreted by webpack
 // eslint-disable-next-line import/no-unresolved
 import createApp from './app.TARGET_ROUTER';
 
