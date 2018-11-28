@@ -35,12 +35,14 @@ const HotelInfoBox = ({ hotel, handleCancellationFormSubmit }) => (
           <HotelContacts contacts={hotel.contacts} />
         </div>
       </div>
+      {hotel.bookingUri && (
       <div className="row pt-1">
         <div className="col">
           <button type="button" className="btn btn-link" data-toggle="collapse" data-target="#form-cancellation" aria-expanded="false" aria-controls="form-cancellation">Cancel a booking?</button>
           <CancellationForm hotel={hotel} handleSubmit={handleCancellationFormSubmit} />
         </div>
       </div>
+      )}
     </div>
   </div>
 );
