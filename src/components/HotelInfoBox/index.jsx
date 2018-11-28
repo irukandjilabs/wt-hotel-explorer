@@ -35,7 +35,7 @@ const HotelInfoBox = ({ hotel, handleCancellationFormSubmit }) => (
           <HotelContacts contacts={hotel.contacts} />
         </div>
       </div>
-      {hotel.bookingUri && (
+      {handleCancellationFormSubmit && hotel.bookingUri && (
       <div className="row pt-1">
         <div className="col">
           <button type="button" className="btn btn-link" data-toggle="collapse" data-target="#form-cancellation" aria-expanded="false" aria-controls="form-cancellation">Cancel a booking?</button>
@@ -49,7 +49,7 @@ const HotelInfoBox = ({ hotel, handleCancellationFormSubmit }) => (
 
 HotelInfoBox.propTypes = {
   hotel: PropTypes.instanceOf(Object).isRequired,
-  handleCancellationFormSubmit: PropTypes.func.isRequired,
+  handleCancellationFormSubmit: PropTypes.func,
 };
 
 export default HotelInfoBox;
