@@ -109,10 +109,6 @@ a.border-bottom {padding-bottom: 3px;}
 .rbt-menu.dropdown-menu.show {
   z-index: 1001;
   margin-top: 0;
-
-  .dropdown-item.active {
-    background-color: #aeaeae; /* TODO fix this to some palette colour*/
-  }
 }
 
 .rbt-input-hint {
