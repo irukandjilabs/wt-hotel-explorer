@@ -22,8 +22,8 @@ export const translateNetworkError = (status, code, message) => {
   return e;
 };
 
-export const byLocation = createActionThunk('SEARCH_HOTELS_BY_LOCATION', ({ centerCoords, radius }) => {
-  const url = `${process.env.WT_SEARCH_API}/hotels/?location=${centerCoords[0]},${centerCoords[1]}:${radius}`;
+export const byLocation = createActionThunk('SEARCH_HOTELS_BY_LOCATION', ({ centerCoords, bboxSide }) => {
+  const url = `${process.env.WT_SEARCH_API}/hotels/?location=${centerCoords[0]},${centerCoords[1]}:${bboxSide}`;
   return fetch(url)
     .then((response) => {
       if (response.status > 299) {

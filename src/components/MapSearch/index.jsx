@@ -8,43 +8,43 @@ class MapSearch extends React.PureComponent {
   state = {
     isSubmitting: false,
     centerCoords: null,
-    radius: 20,
+    bboxSide: 20,
   };
 
   examples = {
     cluj: {
       centerpoint: 'Cluj-Napoca, Romania',
       centerCoords: [46.770066, 23.600819],
-      radius: 30,
+      bboxSide: 30,
     },
     sebes: {
       centerpoint: 'Sebeș, Romania',
       centerCoords: [45.955686, 23.565040],
-      radius: 50,
+      bboxSide: 50,
     },
   }
 
   constructor(props) {
     super(props);
     this.doSubmit = this.doSubmit.bind(this);
-    this.handleRadiusChange = this.handleRadiusChange.bind(this);
+    this.handleBboxSideChange = this.handleBboxSideChange.bind(this);
     this.setExample = this.setExample.bind(this);
     this.performSearch = this.performSearch.bind(this);
   }
 
   setExample(ex) {
     if (this.examples[ex]) {
-      this.performSearch(this.examples[ex].centerCoords, this.examples[ex].radius);
+      this.performSearch(this.examples[ex].centerCoords, this.examples[ex].bboxSide);
     }
   }
 
-  performSearch(centerCoords, radius) {
+  performSearch(centerCoords, bboxSide) {
     const { handleSearchFormSubmit } = this.props;
     this.setState({
       submittedCenterCoords: centerCoords,
-      submittedRadius: parseInt(radius, 10),
+      submittedBboxSide: parseInt(bboxSide, 10),
     });
-    return handleSearchFormSubmit({ centerCoords, radius });
+    return handleSearchFormSubmit({ centerCoords, bboxSide });
   }
 
   doSubmit(e) {
@@ -53,8 +53,8 @@ class MapSearch extends React.PureComponent {
       isSubmitting: true,
     });
 
-    const { centerCoords, radius } = this.state;
-    this.performSearch(centerCoords, radius)
+    const { centerCoords, bboxSide } = this.state;
+    this.performSearch(centerCoords, bboxSide)
       .then(() => {
         this.setState({
           isSubmitting: false,
@@ -62,17 +62,17 @@ class MapSearch extends React.PureComponent {
       });
   }
 
-  handleRadiusChange(e) {
+  handleBboxSideChange(e) {
     this.setState({
-      radius: e.target.value,
+      bboxSide: e.target.value,
     });
   }
 
   render() {
     const {
-      isSubmitting, submittedCenterCoords, submittedRadius, radius, centerCoords,
+      isSubmitting, submittedCenterCoords, submittedBboxSide, bboxSide, centerCoords,
     } = this.state;
-    const examples = Object.keys(this.examples).map(e => (<button type="button" key={e} className="btn btn-dark btn-sm mr-1" onClick={() => this.setExample(e)}>{`${this.examples[e].radius} km around ${this.examples[e].centerpoint}`}</button>));
+    const examples = Object.keys(this.examples).map(e => (<button type="button" key={e} className="btn btn-dark btn-sm mr-1" onClick={() => this.setExample(e)}>{`${this.examples[e].bboxSide} km around ${this.examples[e].centerpoint}`}</button>));
     const { results } = this.props;
 
     return (
@@ -97,15 +97,16 @@ class MapSearch extends React.PureComponent {
                   />
                 </div>
                 <div className="col-md-3">
-                  <label htmlFor="radius">Radius (km)</label>
+                  <label htmlFor="bboxSide">Search box side size (km)</label>
                   <input
                     type="number"
                     min="5"
+                    max="200"
                     className="form-control"
-                    name="radius"
-                    id="radius"
-                    value={radius}
-                    onChange={this.handleRadiusChange}
+                    name="bboxSide"
+                    id="bboxSide"
+                    value={bboxSide}
+                    onChange={this.handleBboxSideChange}
                     placeholder="20"
                   />
                 </div>
@@ -113,7 +114,7 @@ class MapSearch extends React.PureComponent {
                   <button
                     type="submit"
                     className="btn btn-primary form-control my-1"
-                    disabled={!radius || !centerCoords}
+                    disabled={!bboxSide || !centerCoords}
                   >
 Search
                   </button>
@@ -131,7 +132,7 @@ Search
           <div className="col-md-12 map-container-lg">
             <HotelsMap
               centerpoint={submittedCenterCoords}
-              radius={submittedRadius}
+              bboxSide={submittedBboxSide}
               hotels={results}
             />
           </div>
