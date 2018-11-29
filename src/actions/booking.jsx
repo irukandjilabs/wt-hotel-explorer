@@ -132,7 +132,12 @@ export const cancelBooking = createActionThunk('CANCEL_BOOKING', (values) => {
   return fetch(url, {
     method: 'DELETE',
   })
-    .then(response => response.json())
+    .then((response) => {
+      if (response.status === 204) {
+        return { status: 204, code: 'ok' };
+      }
+      return response.json();
+    })
     .then((response) => {
       values.finalize(response.status <= 299, response.code);
     }, () => {

@@ -47,6 +47,10 @@ const HotelInfoBox = ({ hotel, handleCancellationFormSubmit }) => (
   </div>
 );
 
+HotelInfoBox.defaultProps = {
+  handleCancellationFormSubmit: undefined,
+};
+
 HotelInfoBox.propTypes = {
   hotel: PropTypes.instanceOf(Object).isRequired,
   handleCancellationFormSubmit: PropTypes.func,
