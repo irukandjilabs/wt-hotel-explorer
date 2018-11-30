@@ -87,6 +87,35 @@ a.border-bottom {padding-bottom: 3px;}
 }
 
 
+/* Search on map */
+
+.map-container-lg {
+  margin: 0 auto;
+  overflow: hidden;
+
+  border-radius: 5px;
+
+  &, > div {
+    height: 600px;
+  }
+
+  @media all and (min-width: 400px) {
+    &, > div {
+      width: 100%;
+    }
+  }
+}
+
+.rbt-menu.dropdown-menu.show {
+  z-index: 1001;
+  margin-top: 0;
+}
+
+.rbt-input-hint {
+  width: 100%;
+}
+
+
 .card-with-links {
   cursor: pointer;
 }

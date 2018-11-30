@@ -27,6 +27,15 @@ describe('services.cancellation-fees', () => {
       expect(result.length).toBe(0);
     });
 
+    it('should keep policies applicable during stay starting after today', () => {
+      const result = normalizePolicyDates(today, arrival, [
+        {
+          from: '2018-07-01', to: '2019-07-21', deadline: 9, amount: 22,
+        },
+      ]);
+      expect(result.length).toBe(1);
+    });
+
     it('should set from to today if missing', () => {
       const result = normalizePolicyDates(today, arrival, [
         { to: '2018-07-21', deadline: 365, amount: 22 },
