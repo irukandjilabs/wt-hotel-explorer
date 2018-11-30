@@ -19,7 +19,7 @@ import {
   Header, Footer, Disclaimer, Loader,
 } from '../components';
 
-// The folloing import path is interpreted by webpack
+// The following import path is interpreted by webpack
 // eslint-disable-next-line import/no-unresolved
 import createApp from './app.TARGET_ROUTER';
 
@@ -37,9 +37,20 @@ const LoadableHome = Loadable({
 
 const LoadableBookingWizard = Loadable({
   loader: () => import(
-    /* webpackChunkName: "Home-page" */
+    /* webpackChunkName: "Booking-Wizard" */
     /* webpackMode: "lazy" */
     './BookingWizard',
+  ),
+  loading() {
+    return <Loader block={200} label="Loading..." />;
+  },
+});
+
+const LoadableSearchOnMap = Loadable({
+  loader: () => import(
+    /* webpackChunkName: "Search-On-Map" */
+    /* webpackMode: "lazy" */
+    './SearchOnMap',
   ),
   loading() {
     return <Loader block={200} label="Loading..." />;
@@ -82,6 +93,7 @@ const AppContainer = () => {
       <Route exact path="/hotels/:hotelId" component={Hotel} />
       <Route exact path="/error-page" component={ErrorPage} />
       <Route exact path="/booking" component={LoadableBookingWizard} />
+      <Route exact path="/search-on-map" component={LoadableSearchOnMap} />
       <Route exact path="/" component={LoadableHome} />
       <Route component={Handle404} />
     </Switch>

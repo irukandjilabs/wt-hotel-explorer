@@ -41,6 +41,7 @@ const reducer = (state = defaultState, action) => {
   let modifiedList;
   let existingIds;
   let currentErroredHotels;
+  let keepHotelsUninitialized = false;
   let hotel;
   let hotelIndex;
   switch (action.type) {
@@ -56,6 +57,9 @@ const reducer = (state = defaultState, action) => {
       return Object.assign({}, state, {
         hotelsLoading: true,
       });
+    case 'SEARCH_HOTELS_BY_LOCATION_SUCCEEDED':
+      keepHotelsUninitialized = true;
+    // eslint-disable-next-line no-fallthrough
     case 'FETCH_LIST_SUCCEEDED':
       if (!action.payload.items) {
         if (action.payload.errors) {
@@ -100,7 +104,7 @@ const reducer = (state = defaultState, action) => {
         erroredHotels: currentErroredHotels,
         list: modifiedList,
         hotelsLoading: false,
-        hotelsInitialized: true,
+        hotelsInitialized: !keepHotelsUninitialized,
         next: action.payload.next,
       });
     case 'FETCH_DETAIL_STARTED':
