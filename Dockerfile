@@ -11,6 +11,7 @@ COPY . .
 
 ARG GIT_REV
 ARG WT_READ_API
+ARG WT_SEARCH_API
 
 RUN npm run build
 

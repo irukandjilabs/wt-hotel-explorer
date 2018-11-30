@@ -25,7 +25,7 @@ change the `WT_READ_API` environment variable. Currently,
 version 0.8.x of the read api is assumed.
 
 ```sh
-$ docker build --build-arg NODE_ENV=production --build-arg GIT_REV=`git rev-parse --short HEAD` --build-arg WT_READ_API=https://playground-api.windingtree.com  -t windingtree/wt-hotel-explorer .
+$ docker build --build-arg NODE_ENV=production --build-arg GIT_REV=`git rev-parse --short HEAD` --build-arg WT_READ_API=https://playground-api.windingtree.com --build-arg WT_SEARCH_API=https://playground-search-api.windingtree.com -t windingtree/wt-hotel-explorer .
 $ docker run -p 8080:8080 windingtree/wt-hotel-explorer
 ```
 
