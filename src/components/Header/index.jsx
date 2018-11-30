@@ -4,7 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 
 const Header = (props) => {
   const { location } = props;
-  const showBrowseHotels = location.pathname !== '';
+  const showBrowseHotels = location.pathname !== '' && location.pathname !== '/';
   const showGetEstimates = !(/booking(\/.)*/.test(location.pathname));
   return (
     <div id="app-header">
@@ -13,15 +13,15 @@ const Header = (props) => {
           <Link className="navbar-brand mr-2" to="/">Winding Tree</Link>
           <div className="collapse navbar-collapse" id="navbar-content">
             <ul className="navbar-nav ml-auto" id="navbar-nav">
-              <li className="nav-item">
-                <Link className="nav-link h5" to="/search-on-map">Search on map</Link>
-              </li>
               {showBrowseHotels
                   && (
                   <li className="nav-item">
                     <Link className="nav-link h5" to="/">Browse Hotels</Link>
                   </li>
                   )}
+              <li className="nav-item">
+                <Link className="nav-link h5" to="/search-on-map">Search on map</Link>
+              </li>
             </ul>
           </div>
           {showGetEstimates
