@@ -141,9 +141,11 @@ Search
             {(submittedBboxSide && (
             <h3>
 Showing hotels from
+              {' '}
               {submittedBboxSide}
               {' '}
 KM around
+              {' '}
               {submittedCenterPoint}
             </h3>
             ))}
