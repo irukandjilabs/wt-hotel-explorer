@@ -13,12 +13,12 @@ class MapSearch extends React.PureComponent {
 
   examples = {
     cluj: {
-      centerpoint: 'Cluj-Napoca, Romania',
+      centerPoint: 'Cluj-Napoca, Romania',
       centerCoords: [46.770066, 23.600819],
       bboxSide: 30,
     },
     sebes: {
-      centerpoint: 'Sebeș, Romania',
+      centerPoint: 'Sebeș, Romania',
       centerCoords: [45.955686, 23.565040],
       bboxSide: 50,
     },
@@ -34,15 +34,20 @@ class MapSearch extends React.PureComponent {
 
   setExample(ex) {
     if (this.examples[ex]) {
-      this.performSearch(this.examples[ex].centerCoords, this.examples[ex].bboxSide);
+      this.performSearch(
+        this.examples[ex].centerPoint,
+        this.examples[ex].centerCoords,
+        this.examples[ex].bboxSide,
+      );
     }
   }
 
-  performSearch(centerCoords, bboxSide) {
+  performSearch(centerPoint, centerCoords, bboxSide) {
     const { handleSearchFormSubmit } = this.props;
     this.setState({
       submittedCenterCoords: centerCoords,
       submittedBboxSide: parseInt(bboxSide, 10),
+      submittedCenterPoint: centerPoint,
     });
     return handleSearchFormSubmit({ centerCoords, bboxSide });
   }
@@ -53,8 +58,8 @@ class MapSearch extends React.PureComponent {
       isSubmitting: true,
     });
 
-    const { centerCoords, bboxSide } = this.state;
-    this.performSearch(centerCoords, bboxSide)
+    const { centerCoords, centerPoint, bboxSide } = this.state;
+    this.performSearch(centerPoint, centerCoords, bboxSide)
       .then(() => {
         this.setState({
           isSubmitting: false,
@@ -70,9 +75,10 @@ class MapSearch extends React.PureComponent {
 
   render() {
     const {
-      isSubmitting, submittedCenterCoords, submittedBboxSide, bboxSide, centerCoords,
+      isSubmitting, submittedCenterCoords, submittedBboxSide,
+      submittedCenterPoint, bboxSide, centerCoords,
     } = this.state;
-    const examples = Object.keys(this.examples).map(e => (<button type="button" key={e} className="btn btn-dark btn-sm mr-1" onClick={() => this.setExample(e)}>{`${this.examples[e].bboxSide} km around ${this.examples[e].centerpoint}`}</button>));
+    const examples = Object.keys(this.examples).map(e => (<button type="button" key={e} className="btn btn-dark btn-sm mr-1" onClick={() => this.setExample(e)}>{`${this.examples[e].bboxSide} km around ${this.examples[e].centerPoint}`}</button>));
     const { results } = this.props;
 
     return (
@@ -90,6 +96,7 @@ class MapSearch extends React.PureComponent {
                       if (val.length && val[0].geometry && val[0].geometry.coordinates) {
                         this.setState({
                           centerCoords: val[0].geometry.coordinates.reverse(),
+                          centerPoint: `${val[0].properties.city || val[0].properties.name}, ${val[0].properties.country} (${val[0].properties.osm_value})`,
                         });
                       }
                     }}
@@ -131,6 +138,15 @@ Search
         </div>
         <div className="row">
           <div className="col-md-12 map-container-lg">
+            {(submittedBboxSide && (
+            <h3>
+Showing hotels from
+              {submittedBboxSide}
+              {' '}
+KM around
+              {submittedCenterPoint}
+            </h3>
+            ))}
             <HotelsMap
               centerpoint={submittedCenterCoords}
               bboxSide={submittedBboxSide}
