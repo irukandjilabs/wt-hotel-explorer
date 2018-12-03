@@ -112,15 +112,16 @@ class MapSearch extends React.PureComponent {
                 </div>
                 <div className="col-md-3">
                   <button
+                    style={{ marginTop: '32px' }}
                     type="submit"
-                    className="btn btn-primary form-control my-1"
+                    className="btn btn-primary form-control"
                     disabled={!bboxSide || !centerCoords}
                   >
 Search
                   </button>
                 </div>
               </div>
-              <p>
+              <p className="mt-1">
                 <strong className="mr-1">Examples:</strong>
                 {examples}
               </p>

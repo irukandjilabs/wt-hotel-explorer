@@ -16,10 +16,10 @@ const Header = ({ location }) => {
           <div className="collapse navbar-collapse" id="navbar-content">
             <ul className="navbar-nav ml-auto" id="navbar-nav">
               <li className="nav-item">
-                <NavLink className="nav-link h5" exact to="/">Browse Hotels</NavLink>
+                <NavLink className="nav-link" exact to="/">Browse Hotels</NavLink>
               </li>
               <li className="nav-item">
-                <NavLink className="nav-link h5" exact to="/search-on-map">Search on map</NavLink>
+                <NavLink className="nav-link" exact to="/search-on-map">Search on map</NavLink>
               </li>
             </ul>
             {showGetEstimates

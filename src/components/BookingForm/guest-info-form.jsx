@@ -21,8 +21,8 @@ const GuestInfoForm = ({
     </div>
     {form.values.booking.guestInfo && form.values.booking.guestInfo.map((guest, index) => (
       <div className="form-row mb-1" key={`guest.${guest.id}`}>
-        <div className="col-md-3">
-          <label htmlFor={`booking.guestInfo.${index}.name`} className="col-form-label">
+        <div className="col col-md-3 col-form-label">
+          <label htmlFor={`booking.guestInfo.${index}.name`}>
             Guest #
             {index + 1}
           </label>
