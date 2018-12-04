@@ -36,12 +36,21 @@ const HotelInfoBox = ({ hotel, handleCancellationFormSubmit }) => (
         </div>
       </div>
       {handleCancellationFormSubmit && hotel.bookingUri && (
-      <div className="row pt-1">
-        <div className="col">
-          <button type="button" className="btn btn-link" data-toggle="collapse" data-target="#form-cancellation" aria-expanded="false" aria-controls="form-cancellation">Cancel a booking?</button>
-          <CancellationForm hotel={hotel} handleSubmit={handleCancellationFormSubmit} />
-        </div>
-      </div>
+        <React.Fragment>
+          <div className="row pt-1">
+            <div className="col">
+              <h5>More actions</h5>
+              <ul className="list-unstyled">
+                <li>
+                  <button type="button" className="btn btn-link" data-toggle="collapse" data-target="#form-cancellation" aria-expanded="false" aria-controls="form-cancellation">Cancel a booking?</button>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div id="form-cancellation" className="row collapse">
+            <CancellationForm hotel={hotel} handleSubmit={handleCancellationFormSubmit} />
+          </div>
+        </React.Fragment>
       )}
     </div>
   </div>

@@ -50,33 +50,37 @@ const CancellationForm = ({ hotel, handleSubmit, initialValues }) => {
     });
   };
   return (
-    <div className="collapse" id="form-cancellation">
+    <div className="col-md-12">
       <Formik
         initialValues={initialValues}
         validate={validate}
         onSubmit={doSubmit}
+        className="form-inline"
       >
         {({
           isSubmitting, errors, touched, status,
         }) => (
           <React.Fragment>
-            {isSubmitting && <Loader block={200} label="Submitting..." />}
+            {isSubmitting && <Loader block={100} label="Submitting..." />}
             {!isSubmitting && (
-            <Form className="border border-light bg-light p-2 mb-2">
-              <div className="form-row mb-1">
-                <div className="form-group col-md-6">
-                  {(status !== STATUS_SUCCEEDED) && (
-                    <label htmlFor="bookingId">Booking reference</label>
-                  )}
-                  {(status === STATUS_SUCCEEDED) && (
-                    <label htmlFor="bookingId">Success! The booking has been cancelled. You may now try another one:</label>
-                  )}
-                  <Field type="text" className="form-control" name="bookingId" id="bookingId" placeholder="Booking reference" />
-                  {errors.bookingId && touched.bookingId && <small className="text-danger">{errors.bookingId}</small>}
+              <Form className="border bg-white py-1">
+                <div className="form-inline">
+                  <div className="col-md-3">
+                    {(status === STATUS_SUCCEEDED) ? (
+                      <label htmlFor="bookingId">Success! The booking has been cancelled. You may now try another one:</label>
+                    ) : (
+                      <label htmlFor="bookingId">Booking reference:</label>
+                    )}
+                  </div>
+                  <div className="col-md-5">
+                    <Field type="text" className="form-control" name="bookingId" id="bookingId" placeholder="Booking reference" />
+                    {errors.bookingId && touched.bookingId && <div><small className="text-danger">{errors.bookingId}</small></div>}
+                  </div>
+                  <div className="col-md-4 text-right">
+                    <button type="submit" disabled={isSubmitting} className="btn btn-primary">Cancel booking</button>
+                  </div>
                 </div>
-              </div>
-              <button type="submit" disabled={isSubmitting} className="btn btn-primary">Cancel booking.</button>
-            </Form>
+              </Form>
             )}
           </React.Fragment>
         )}
