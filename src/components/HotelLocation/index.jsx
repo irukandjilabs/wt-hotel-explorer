@@ -39,11 +39,38 @@ class LocationMap extends React.PureComponent {
           <Popup>
             <div className="map-popup">
               <h4>{name}</h4>
-              {address.line1 && <p>{address.line1}</p>}
-              {address.line2 && <p>{address.line2}</p>}
-              {address.postalCode && <p>{address.postalCode}</p>}
-              {address.city && <p>{address.city}</p>}
-              {address.country && <p>{address.country}</p>}
+              <p>
+                {address.line1 && (
+                <span>
+                  {address.line1}
+                  <br />
+                </span>
+                )}
+                {address.line2 && (
+                <span>
+                  {address.line2}
+                  <br />
+                </span>
+                )}
+                {address.postalCode && (
+                <span>
+                  {address.postalCode}
+                  <br />
+                </span>
+                )}
+                {address.city && (
+                <span>
+                  {address.city}
+                  <br />
+                </span>
+                )}
+                {address.country && (
+                <span>
+                  {address.country}
+                  <br />
+                </span>
+                )}
+              </p>
             </div>
           </Popup>
         </Marker>
@@ -61,11 +88,38 @@ LocationMap.propTypes = {
 const Address = ({ name, address }) => (
   <div>
     <h4>{name}</h4>
-    {address.line1 && <p>{address.line1}</p>}
-    {address.line2 && <p>{address.line2}</p>}
-    {address.postalCode && <p>{address.postalCode}</p>}
-    {address.city && <p>{address.city}</p>}
-    {address.country && <p>{address.country}</p>}
+    <p>
+      {address.line1 && (
+      <span>
+        {address.line1}
+        <br />
+      </span>
+      )}
+      {address.line2 && (
+      <span>
+        {address.line2}
+        <br />
+      </span>
+      )}
+      {address.postalCode && (
+      <span>
+        {address.postalCode}
+        <br />
+      </span>
+      )}
+      {address.city && (
+      <span>
+        {address.city}
+        <br />
+      </span>
+      )}
+      {address.country && (
+      <span>
+        {address.country}
+        <br />
+      </span>
+      )}
+    </p>
   </div>
 );
 
