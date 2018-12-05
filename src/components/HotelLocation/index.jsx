@@ -10,6 +10,65 @@ import L from 'leaflet';
 import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
 import iconUrl from 'leaflet/dist/images/marker-icon.png';
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
+import countryList from '../../assets/country-list.json';
+
+const indexedCountryList = countryList.reduce((acc, c) => {
+  acc[c.code] = c.name;
+  return acc;
+}, {});
+
+const Address = ({ name, address }) => (
+  <React.Fragment>
+    <h4>{name}</h4>
+    <p>
+      {address.line1 && (
+      <span>
+        {address.line1}
+        <br />
+      </span>
+      )}
+      {address.line2 && (
+      <span>
+        {address.line2}
+        <br />
+      </span>
+      )}
+      {address.city && (
+      <span>
+        {address.city}
+        {address.state || address.postalCode ? ',' : ''}
+        {address.state && (
+          <React.Fragment>
+            {' '}
+            {address.state}
+          </React.Fragment>
+        )}
+        {address.postalCode && (
+          <React.Fragment>
+            {' '}
+            {address.postalCode}
+          </React.Fragment>
+        )}
+        <br />
+      </span>
+      )}
+      {address.country && (
+      <span>
+        {indexedCountryList[address.country]
+          ? indexedCountryList[address.country]
+          : address.country}
+        <br />
+      </span>
+      )}
+    </p>
+  </React.Fragment>
+);
+
+Address.propTypes = {
+  name: PropTypes.string.isRequired,
+  address: PropTypes.instanceOf(Object).isRequired,
+};
+
 
 class LocationMap extends React.PureComponent {
   state = {
@@ -38,39 +97,7 @@ class LocationMap extends React.PureComponent {
         <Marker position={position}>
           <Popup>
             <div className="map-popup">
-              <h4>{name}</h4>
-              <p>
-                {address.line1 && (
-                <span>
-                  {address.line1}
-                  <br />
-                </span>
-                )}
-                {address.line2 && (
-                <span>
-                  {address.line2}
-                  <br />
-                </span>
-                )}
-                {address.postalCode && (
-                <span>
-                  {address.postalCode}
-                  <br />
-                </span>
-                )}
-                {address.city && (
-                <span>
-                  {address.city}
-                  <br />
-                </span>
-                )}
-                {address.country && (
-                <span>
-                  {address.country}
-                  <br />
-                </span>
-                )}
-              </p>
+              <Address name={name} address={address} />
             </div>
           </Popup>
         </Marker>
@@ -81,49 +108,6 @@ class LocationMap extends React.PureComponent {
 
 LocationMap.propTypes = {
   location: PropTypes.instanceOf(Object).isRequired,
-  name: PropTypes.string.isRequired,
-  address: PropTypes.instanceOf(Object).isRequired,
-};
-
-const Address = ({ name, address }) => (
-  <div>
-    <h4>{name}</h4>
-    <p>
-      {address.line1 && (
-      <span>
-        {address.line1}
-        <br />
-      </span>
-      )}
-      {address.line2 && (
-      <span>
-        {address.line2}
-        <br />
-      </span>
-      )}
-      {address.postalCode && (
-      <span>
-        {address.postalCode}
-        <br />
-      </span>
-      )}
-      {address.city && (
-      <span>
-        {address.city}
-        <br />
-      </span>
-      )}
-      {address.country && (
-      <span>
-        {address.country}
-        <br />
-      </span>
-      )}
-    </p>
-  </div>
-);
-
-Address.propTypes = {
   name: PropTypes.string.isRequired,
   address: PropTypes.instanceOf(Object).isRequired,
 };
