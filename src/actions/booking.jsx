@@ -99,6 +99,7 @@ export const sendBooking = createActionThunk('SEND_BOOKING', ({ bookingData, boo
     })
     .then(data => ({
       id: data.id,
+      status: data.status,
     }));
 });
 
