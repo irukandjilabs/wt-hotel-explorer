@@ -22,22 +22,25 @@ export const translateNetworkError = (status, code, message) => {
   return e;
 };
 
+const paginatedFetchSearchResults = url => fetch(url)
+  .then((r) => {
+    if (r.status > 299) {
+      throw translateNetworkError(r.status, 'Cannot search hotels!');
+    }
+    return r.json();
+  }).then((data) => {
+    if (data.next) {
+      return paginatedFetchSearchResults(data.next)
+        .then(s => ({
+          items: data.items ? data.items.concat(s.items) : s.items,
+        }));
+    }
+    return data;
+  });
+
 export const byLocation = createActionThunk('SEARCH_HOTELS_BY_LOCATION', ({ centerCoords, bboxSide }) => {
   const url = `${process.env.WT_SEARCH_API}/hotels/?location=${centerCoords[0]},${centerCoords[1]}:${bboxSide}`;
-  return fetch(url)
-    .then((response) => {
-      if (response.status > 299) {
-        throw translateNetworkError(response.status, 'Cannot search hotels!');
-      }
-      return response.json();
-    }).then((data) => {
-      // TODO handle eventual pagination
-      // We're deleting next to not mangle with eventual next page in the generic hotel listing
-      // this should be improved in a way that search results do not interfere with standard
-      // hotel listings
-      delete data.next; // eslint-disable-line no-param-reassign
-      return data;
-    });
+  return paginatedFetchSearchResults(url);
 });
 
 export default {
