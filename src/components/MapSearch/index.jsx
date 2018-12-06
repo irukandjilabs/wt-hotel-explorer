@@ -53,6 +53,7 @@ class MapSearch extends React.PureComponent {
             ))}
             <HotelsMap
               centerpoint={submittedCenterCoords}
+              centerpointName={submittedCenterPoint}
               bboxSide={submittedBboxSide}
               hotels={results}
             />

@@ -7,9 +7,13 @@ import {
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
-import iconUrl from 'leaflet/dist/images/marker-icon.png';
+import markerRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
+import markerUrl from 'leaflet/dist/images/marker-icon.png';
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
+import { Address } from '../HotelLocation';
+import greenMarkerUrl from '../../assets/img/marker-green.png';
+import greenMarkerRetinaUrl from '../../assets/img/marker-green-2x.png';
+
 
 // copied over from wt-search-api
 function toRadians(degrees) {
@@ -49,16 +53,14 @@ function getBoundingBox(lat, lng, distance) {
 
 class HotelsMap extends React.PureComponent {
   render() {
-    const { centerpoint, bboxSide, hotels } = this.props;
+    const {
+      centerpoint, centerpointName, bboxSide, hotels,
+    } = this.props;
     const pins = hotels.map(h => (
       <Marker key={h.id} position={[h.location.latitude, h.location.longitude]}>
         <Popup>
           <div className="map-popup">
-            <h4><Link to={`/hotels/${h.id}`}>{h.name}</Link></h4>
-            {h.address && h.address.line2 && <p>{h.address.line2}</p>}
-            {h.address && h.address.postalCode && <p>{h.address.postalCode}</p>}
-            {h.address && h.address.city && <p>{h.address.city}</p>}
-            {h.address && h.address.country && <p>{h.address.country}</p>}
+            <Address address={h.address} name={(<Link to={`/hotels/${h.id}`}>{h.name}</Link>)} />
           </div>
         </Popup>
       </Marker>
@@ -67,9 +69,19 @@ class HotelsMap extends React.PureComponent {
     // Set path to marker icon
     delete L.Icon.Default.prototype._getIconUrl; // eslint-disable-line
     L.Icon.Default.mergeOptions({
-      iconRetinaUrl,
-      iconUrl,
+      iconRetinaUrl: markerRetinaUrl,
+      iconUrl: markerUrl,
       shadowUrl,
+    });
+    const greenMarker = new L.Icon({
+      iconRetinaUrl: greenMarkerRetinaUrl,
+      iconUrl: greenMarkerUrl,
+      shadowUrl,
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      tooltipAnchor: [16, -28],
+      shadowSize: [41, 41],
     });
 
     if (!centerpoint) {
@@ -93,6 +105,13 @@ class HotelsMap extends React.PureComponent {
         <Rectangle
           bounds={bounds}
         />
+        <Marker position={centerpoint} icon={greenMarker}>
+          <Popup>
+            <div className="map-popup">
+              <h4>{centerpointName}</h4>
+            </div>
+          </Popup>
+        </Marker>
         {pins}
       </Map>
     );
@@ -101,12 +120,14 @@ class HotelsMap extends React.PureComponent {
 
 HotelsMap.defaultProps = {
   centerpoint: null,
+  centerpointName: '',
   bboxSide: null,
   hotels: [],
 };
 
 HotelsMap.propTypes = {
   centerpoint: PropTypes.instanceOf(Array),
+  centerpointName: PropTypes.string,
   bboxSide: PropTypes.number,
   hotels: PropTypes.instanceOf(Array),
 };
