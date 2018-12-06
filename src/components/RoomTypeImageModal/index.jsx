@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ImageList from '../ImageList';
 
 const RoomTypeImageModal = ({ roomType, index }) => (
-  <div className="modal modal--carousel" id={`roomModal-${index + 1}`} tabIndex={`-${index + 1}`} role="dialog">
+  <div className="modal modal--carousel" id={`roomModal-${index + 1}`} tabIndex={`-${index + 1}`} role="dialog" data-backdrop="false">
     <div className="modal-dialog" role="document">
       <div className="modal-content">
         <div className="modal-header">
