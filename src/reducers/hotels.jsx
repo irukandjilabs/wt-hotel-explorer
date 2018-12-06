@@ -41,7 +41,6 @@ const reducer = (state = defaultState, action) => {
   let modifiedList;
   let existingIds;
   let currentErroredHotels;
-  let keepHotelsUninitialized = false;
   let hotel;
   let hotelIndex;
   switch (action.type) {
@@ -57,9 +56,31 @@ const reducer = (state = defaultState, action) => {
       return Object.assign({}, state, {
         hotelsLoading: true,
       });
+    // cache hotels returned with search query for later use
     case 'SEARCH_HOTELS_BY_LOCATION_SUCCEEDED':
-      keepHotelsUninitialized = true;
-    // eslint-disable-next-line no-fallthrough
+      modifiedList = [...state.list];
+      existingIds = state.list.reduce((acc, h, i) => {
+        acc[h.id] = i;
+        return acc;
+      }, {});
+      for (let i = 0; i < action.payload.items.length; i += 1) {
+        if (existingIds[action.payload.items[i].id] !== undefined) {
+          modifiedList[existingIds[action.payload.items[i].id]] = Object.assign({},
+            modifiedList[existingIds[action.payload.items[i].id]],
+            action.payload.items[i]);
+        } else {
+          modifiedList.push(Object.assign({}, action.payload.items[i], {
+            hasDetailLoaded: false,
+            hasDetailLoading: false,
+          }));
+        }
+      }
+      return Object.assign({}, state, {
+        list: modifiedList,
+        hotelsLoading: false,
+        hotelsInitialized: false,
+      });
+
     case 'FETCH_LIST_SUCCEEDED':
       if (!action.payload.items) {
         if (action.payload.errors) {
@@ -104,7 +125,7 @@ const reducer = (state = defaultState, action) => {
         erroredHotels: currentErroredHotels,
         list: modifiedList,
         hotelsLoading: false,
-        hotelsInitialized: !keepHotelsUninitialized,
+        hotelsInitialized: true,
         next: action.payload.next,
       });
     case 'FETCH_DETAIL_STARTED':

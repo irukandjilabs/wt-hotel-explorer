@@ -66,13 +66,22 @@ class SearchForm extends React.PureComponent {
     const {
       isSubmitting, bboxSide, centerCoords,
     } = this.state;
-    const examples = Object.keys(this.examples).map(e => (<button type="button" key={e} className="btn btn-dark btn-sm mr-1" onClick={() => this.setExample(e)}>{`${this.examples[e].bboxSide} km around ${this.examples[e].centerPoint}`}</button>));
+    const examples = Object.keys(this.examples).map(e => (
+      <button
+        type="button"
+        key={e}
+        className="btn btn-dark btn-sm col-sm-12 col-md-auto mr-1 mb-1"
+        onClick={() => this.setExample(e)}
+      >
+        {`${this.examples[e].bboxSide} km around ${this.examples[e].centerPoint}`}
+      </button>
+    ));
 
     return (
       <React.Fragment>
         {isSubmitting && <Loader block={100} label="Submitting..." />}
         {!isSubmitting && (
-        <form className="mb-2" onSubmit={this.doSubmit}>
+        <form className="mb-1" onSubmit={this.doSubmit}>
           <div className="form-row">
             <div className="col-md-6">
               <label htmlFor="centerpoint">Hotels near</label>
@@ -113,10 +122,10 @@ Search
               </button>
             </div>
           </div>
-          <p className="mt-1">
+          <div className="mt-1">
             <strong className="mr-1">Examples:</strong>
             {examples}
-          </p>
+          </div>
         </form>
         )}
       </React.Fragment>

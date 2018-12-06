@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+
 import HotelsMap from './hotels-map';
 import SearchForm from './search-form';
 
@@ -27,7 +29,15 @@ class MapSearch extends React.PureComponent {
 
   render() {
     const { submittedCenterCoords, submittedBboxSide, submittedCenterPoint } = this.state;
-    const { results } = this.props;
+    const { results, sortedResults } = this.props;
+    const sortedResultsRows = sortedResults.map(s => (
+      <tr key={s.id}>
+        <td><Link to={`hotels/${s.id}`}>{s.hotel.name}</Link></td>
+        <td>
+          {`${s.score.value.toFixed(2)} KM`}
+        </td>
+      </tr>
+    ));
 
     return (
       <React.Fragment>
@@ -39,15 +49,7 @@ class MapSearch extends React.PureComponent {
         <div className="row">
           <div className="col-md-12 map-container-lg">
             {(submittedBboxSide && (
-            <h3>
-Showing hotels from
-              {' '}
-              {submittedBboxSide}
-              {' '}
-KM around
-              {' '}
-              {submittedCenterPoint}
-            </h3>
+              <h3>{`Showing hotels from ${submittedBboxSide} KM around ${submittedCenterPoint}`}</h3>
             ))}
             <HotelsMap
               centerpoint={submittedCenterCoords}
@@ -56,6 +58,23 @@ KM around
             />
           </div>
         </div>
+        {!!sortedResults.length && (
+        <div className="row mt-2">
+          <div className="col-md-12">
+            <table className="table table-striped table-responsive-sm">
+              <thead>
+                <tr>
+                  <th>Hotel name</th>
+                  <th>{`Distance from ${submittedCenterPoint}`}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sortedResultsRows}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        )}
       </React.Fragment>
     );
   }
@@ -63,11 +82,13 @@ KM around
 
 MapSearch.defaultProps = {
   results: [],
+  sortedResults: [],
 };
 
 MapSearch.propTypes = {
   handleSearchFormSubmit: PropTypes.func.isRequired,
   results: PropTypes.instanceOf(Array),
+  sortedResults: PropTypes.instanceOf(Array),
 };
 
 export default MapSearch;
