@@ -3,25 +3,37 @@ import PropTypes from 'prop-types';
 import Loader from '../Loader';
 import AddressTypeahead from './address-typeahead';
 
+const formatName = n => `${n.properties.city || n.properties.name}, ${n.properties.country} (${n.properties.osm_value})`;
+
 class SearchForm extends React.PureComponent {
   state = {
     isSubmitting: false,
-    centerCoords: null,
+    selectedPoint: [],
     bboxSide: 20,
   };
 
   examples = {
     cluj: {
-      centerPoint: 'Cluj-Napoca, Romania',
-      centerCoords: [46.770066, 23.600819],
+      value: {
+        geometry: { coordinates: [23.5900604, 46.7693367], type: 'Point' },
+        type: 'Feature',
+        properties: {
+          osm_id: 32591050, osm_type: 'N', country: 'Romania', osm_key: 'place', city: 'Cluj-Napoca', osm_value: 'city', postcode: '400133', name: 'Cluj-Napoca', state: 'Cluj',
+        },
+      },
       bboxSide: 30,
     },
     sebes: {
-      centerPoint: 'Sebeș, Romania',
-      centerCoords: [45.955686, 23.565040],
+      value: {
+        geometry: { coordinates: [23.56496217814282, 45.955398], type: 'Point' },
+        type: 'Feature',
+        properties: {
+          osm_id: 75247486, osm_type: 'W', extent: [23.5333448, 45.9768038, 23.593344, 45.934104], country: 'Romania', osm_key: 'place', osm_value: 'town', name: 'Sebeș', state: 'Alba',
+        },
+      },
       bboxSide: 50,
     },
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -33,9 +45,13 @@ class SearchForm extends React.PureComponent {
   setExample(ex) {
     if (this.examples[ex]) {
       const { onSubmit } = this.props;
+      this.setState({
+        bboxSide: this.examples[ex].bboxSide,
+        selectedPoint: [this.examples[ex].value],
+      });
       onSubmit(
-        this.examples[ex].centerPoint,
-        this.examples[ex].centerCoords,
+        formatName(this.examples[ex].value),
+        this.examples[ex].value.geometry.coordinates,
         this.examples[ex].bboxSide,
       );
     }
@@ -47,13 +63,17 @@ class SearchForm extends React.PureComponent {
       isSubmitting: true,
     });
     const { onSubmit } = this.props;
-    const { centerCoords, centerPoint, bboxSide } = this.state;
-    onSubmit(centerPoint, centerCoords, bboxSide)
-      .then(() => {
-        this.setState({
-          isSubmitting: false,
-        });
+    const { selectedPoint, bboxSide } = this.state;
+
+    onSubmit(
+      formatName(selectedPoint[0]),
+      selectedPoint[0].geometry.coordinates,
+      bboxSide,
+    ).then(() => {
+      this.setState({
+        isSubmitting: false,
       });
+    });
   }
 
   handleBboxSideChange(e) {
@@ -64,71 +84,67 @@ class SearchForm extends React.PureComponent {
 
   render() {
     const {
-      isSubmitting, bboxSide, centerCoords,
+      isSubmitting, bboxSide, selectedPoint,
     } = this.state;
-    const examples = Object.keys(this.examples).map(e => (
+    const examples = Object.keys(this.examples).map(ex => (
       <button
         type="button"
-        key={e}
+        key={ex}
         className="btn btn-dark btn-sm col-sm-12 col-md-auto mr-1 mb-1"
-        onClick={() => this.setExample(e)}
+        onClick={() => this.setExample(ex)}
       >
-        {`${this.examples[e].bboxSide} km around ${this.examples[e].centerPoint}`}
+        {`${this.examples[ex].bboxSide} KM around ${formatName(this.examples[ex].value)}`}
       </button>
     ));
 
     return (
-      <React.Fragment>
-        {isSubmitting && <Loader block={100} label="Submitting..." />}
-        {!isSubmitting && (
-        <form className="mb-1" onSubmit={this.doSubmit}>
-          <div className="form-row">
-            <div className="col-md-6">
-              <label htmlFor="centerpoint">Hotels near</label>
-              <AddressTypeahead
-                onChange={(val) => {
-                  if (val.length && val[0].geometry && val[0].geometry.coordinates) {
-                    this.setState({
-                      centerCoords: val[0].geometry.coordinates.reverse(),
-                      centerPoint: `${val[0].properties.city || val[0].properties.name}, ${val[0].properties.country} (${val[0].properties.osm_value})`,
-                    });
-                  }
-                }}
-                inputProps={{ name: 'centerpoint', id: 'centerpoint' }}
-              />
-            </div>
-            <div className="col-md-3">
-              <label htmlFor="bboxSide">Search box side size (km)</label>
-              <input
-                type="number"
-                min="5"
-                max="200"
-                className="form-control"
-                name="bboxSide"
-                id="bboxSide"
-                value={bboxSide}
-                onChange={this.handleBboxSideChange}
-                placeholder="20"
-              />
-            </div>
-            <div className="col-md-3">
-              <button
-                style={{ marginTop: '32px' }}
-                type="submit"
-                className="btn btn-primary form-control"
-                disabled={!bboxSide || !centerCoords}
-              >
-Search
-              </button>
-            </div>
+      <form className="mb-1" onSubmit={this.doSubmit}>
+        <div className="form-row">
+          <div className="col-md-6">
+            <label htmlFor="centerpoint">Hotels near</label>
+            <AddressTypeahead
+              onChange={(val) => {
+                if (val.length && val[0].geometry && val[0].geometry.coordinates) {
+                  this.setState({
+                    selectedPoint: val,
+                  });
+                }
+              }}
+              defaultSelected={selectedPoint}
+              inputProps={{ name: 'centerpoint', id: 'centerpoint', disabled: isSubmitting }}
+            />
           </div>
-          <div className="mt-1">
-            <strong className="mr-1">Examples:</strong>
-            {examples}
+          <div className="col-md-3">
+            <label htmlFor="bboxSide">Search box side size (KM)</label>
+            <input
+              disabled={isSubmitting}
+              type="number"
+              min="5"
+              max="200"
+              className="form-control"
+              name="bboxSide"
+              id="bboxSide"
+              value={bboxSide}
+              onChange={this.handleBboxSideChange}
+              placeholder="20"
+            />
           </div>
-        </form>
-        )}
-      </React.Fragment>
+          <div className="col-md-3">
+            <button
+              style={{ marginTop: '32px' }}
+              type="submit"
+              className="btn btn-primary form-control"
+              disabled={!bboxSide || !(selectedPoint.length)}
+            >
+              {isSubmitting ? <Loader /> : <span>Search</span>}
+            </button>
+          </div>
+        </div>
+        <div className="mt-1">
+          <strong className="mr-1">Examples:</strong>
+          {examples}
+        </div>
+      </form>
     );
   }
 }

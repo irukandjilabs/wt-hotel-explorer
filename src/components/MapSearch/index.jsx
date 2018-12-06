@@ -19,12 +19,18 @@ class MapSearch extends React.PureComponent {
 
   performSearch(centerPoint, centerCoords, bboxSide) {
     const { handleSearchFormSubmit } = this.props;
+    // Photon and Leaflet use lng,lat and lat,lng :(
+    // We need to do a copy to prevent reversing back and forth
+    const revertedCoords = [].concat(centerCoords).reverse();
     this.setState({
-      submittedCenterCoords: centerCoords,
+      submittedCenterCoords: revertedCoords,
       submittedBboxSide: parseInt(bboxSide, 10),
       submittedCenterPoint: centerPoint,
     });
-    return handleSearchFormSubmit({ centerCoords, bboxSide });
+    return handleSearchFormSubmit({
+      centerCoords: revertedCoords,
+      bboxSide,
+    });
   }
 
   render() {
