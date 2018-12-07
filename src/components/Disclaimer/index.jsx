@@ -5,7 +5,7 @@ export default () => (
     <div className="col">
       <div className="alert alert-light border border-info p-1 mb-1" role="alert">
 
-        <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+        <button type="button" className="close text-dark" data-dismiss="alert" aria-label="Close">
           <i className="mdi mdi-close" />
         </button>
 

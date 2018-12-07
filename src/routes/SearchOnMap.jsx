@@ -8,28 +8,36 @@ import actions from '../actions';
 import ScrollToTopOnMount from '../components/ScrollToTopOnMount';
 import MapSearch from '../components/MapSearch';
 
-const SearchOnMap = ({ handleSearchFormSubmit, results }) => (
+const SearchOnMap = ({ handleSearchFormSubmit, results, sortedResults }) => (
   <React.Fragment>
     <ScrollToTopOnMount />
-    <MapSearch handleSearchFormSubmit={handleSearchFormSubmit} results={results} />
+    <MapSearch
+      handleSearchFormSubmit={handleSearchFormSubmit}
+      results={results}
+      sortedResults={sortedResults}
+    />
   </React.Fragment>
 );
 
 SearchOnMap.defaultProps = {
   results: [],
+  sortedResults: [],
 };
 
 SearchOnMap.propTypes = {
   handleSearchFormSubmit: PropTypes.func.isRequired,
   results: PropTypes.instanceOf(Array),
+  sortedResults: PropTypes.instanceOf(Array),
 };
 
 export default connect(
   (state) => {
     const filterHotels = selectors.hotels.makeHotelFilterByIds();
+    const getHotel = selectors.hotels.makeGetHotelById();
     const searchResults = selectors.search.getResults(state);
     return {
       results: filterHotels(state, searchResults),
+      sortedResults: selectors.search.getSortedResults(state, getHotel),
     };
   },
   dispatch => ({

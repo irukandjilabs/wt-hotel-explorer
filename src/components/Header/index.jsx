@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, NavLink, withRouter } from 'react-router-dom';
 
-const Header = (props) => {
-  const { location } = props;
-  const showBrowseHotels = location.pathname !== '' && location.pathname !== '/';
-  const showGetEstimates = !(/booking(\/.)*/.test(location.pathname));
+const Header = ({ location }) => {
+  const showGetEstimates = /(^\/$)|^\/(hotels(\/.*)?)/.test(location.pathname);
   return (
     <div id="app-header">
       <nav className="navbar navbar-expand-lg navbar-light" id="navbar">
@@ -17,14 +15,11 @@ const Header = (props) => {
 
           <div className="collapse navbar-collapse" id="navbar-content">
             <ul className="navbar-nav ml-auto" id="navbar-nav">
-              {showBrowseHotels
-                  && (
-                  <li className="nav-item">
-                    <Link className="nav-link h5" to="/">Browse Hotels</Link>
-                  </li>
-                  )}
               <li className="nav-item">
-                <Link className="nav-link h5" to="/search-on-map">Search on map</Link>
+                <NavLink className="nav-link" exact to="/">Browse Hotels</NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" exact to="/search-on-map">Search on map</NavLink>
               </li>
             </ul>
             {showGetEstimates

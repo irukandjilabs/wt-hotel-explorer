@@ -1,10 +1,9 @@
 import React from 'react';
 
 export default () => (
-  <footer id="app-footer">
+  <footer className="footer bg-accent text-white">
     <div className="container">
-
-      <div className="pt-2 pb-1">
+      <div className="pt-2 pb-1 footer__row">
 
         <div className="row">
 
@@ -59,8 +58,10 @@ export default () => (
 
         </div>
       </div>
-      <hr className="text--alpha" />
-      <div className="py-1">
+
+      <hr className="text-alpha" />
+
+      <div className="pt-1">
         <div className="d-flex flex-column-reverse flex-md-row align-items-center">
           <div className="d-flex flex-column flex-md-row align-items-center align-items-md-baseline">
             <small>

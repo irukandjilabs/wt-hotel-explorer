@@ -148,7 +148,7 @@ Booking of
                   <div className="card">
                     <div className="card-body">
                       <div className="form-row mb-1">
-                        <div className="col col-form-label col-md-3">
+                        <div className="col col-md-3">
                           Date of arrival
                         </div>
                         <div className="col">
@@ -156,7 +156,7 @@ Booking of
                         </div>
                       </div>
                       <div className="form-row mb-1">
-                        <div className="col col-form-label col-md-3">
+                        <div className="col col-md-3">
                           Date of departure
                         </div>
                         <div className="col">
@@ -164,7 +164,7 @@ Booking of
                         </div>
                       </div>
                       <div className="form-row mb-1">
-                        <div className="col col-form-label col-md-3">
+                        <div className="col col-md-3">
                           Total price
                         </div>
                         <div className="col">
@@ -176,7 +176,7 @@ Booking of
                         </div>
                       </div>
                       <div className="form-row mb-1">
-                        <div className="col col-form-label col-md-3">
+                        <div className="col col-md-3">
                           Cancellation terms
                         </div>
                         <div className="col">

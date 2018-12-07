@@ -4,3 +4,4 @@ public/
 coverage/
 .vscode/
 .env
+.idea/
