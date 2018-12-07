@@ -33,13 +33,16 @@ const paginatedFetchSearchResults = url => fetch(url)
       return paginatedFetchSearchResults(data.next)
         .then(s => ({
           items: data.items ? data.items.concat(s.items) : s.items,
+          sortingScores: data.sortingScores
+            ? data.sortingScores.concat(s.sortingScores)
+            : s.sortingScores,
         }));
     }
     return data;
   });
 
 export const byLocation = createActionThunk('SEARCH_HOTELS_BY_LOCATION', ({ centerCoords, bboxSide }) => {
-  const url = `${process.env.WT_SEARCH_API}/hotels/?location=${centerCoords[0]},${centerCoords[1]}:${bboxSide}`;
+  const url = `${process.env.WT_SEARCH_API}/hotels/?location=${centerCoords[0]},${centerCoords[1]}:${bboxSide}&sortByDistance=${centerCoords[0]},${centerCoords[1]}`;
   return paginatedFetchSearchResults(url);
 });
 

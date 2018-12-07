@@ -65,7 +65,10 @@ const Address = ({ name, address }) => (
 );
 
 Address.propTypes = {
-  name: PropTypes.string.isRequired,
+  name: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.instanceOf(Object),
+  ]).isRequired,
   address: PropTypes.instanceOf(Object).isRequired,
 };
 
