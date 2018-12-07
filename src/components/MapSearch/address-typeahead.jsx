@@ -26,18 +26,32 @@ class AddressTypeahead extends React.PureComponent {
   }
 
   render() {
-    const { isLoading, options } = this.state;
-    const { onChange, inputProps } = this.props;
+    const { isLoading, options, selected } = this.state;
+    const { onChange, defaultSelected, inputProps } = this.props;
+
+    let opts = options;
+    if (!opts.length && selected && selected.length) {
+      opts = selected;
+    }
+    if (!opts.length && defaultSelected && defaultSelected.length) {
+      opts = defaultSelected;
+    }
+
     return (
       <AsyncTypeahead
         isLoading={isLoading}
-        onChange={onChange}
+        onChange={(values) => {
+          this.setState({ selected: values });
+          onChange(values);
+        }}
         labelKey={opt => `${opt.properties.city || opt.properties.name}, ${opt.properties.country} (${opt.properties.osm_value})`}
         onSearch={(query) => {
           this.setState({ isLoading: true });
           this.resolveQuery(query);
         }}
-        options={options}
+        options={opts}
+        selected={selected || defaultSelected}
+        defaultSelected={defaultSelected}
         inputProps={inputProps}
       />
     );
@@ -46,10 +60,12 @@ class AddressTypeahead extends React.PureComponent {
 
 AddressTypeahead.defaultProps = {
   inputProps: {},
+  defaultSelected: [],
 };
 
 AddressTypeahead.propTypes = {
   onChange: PropTypes.func.isRequired,
+  defaultSelected: PropTypes.instanceOf(Array),
   inputProps: PropTypes.instanceOf(Object),
 };
 

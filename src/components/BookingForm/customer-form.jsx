@@ -179,7 +179,7 @@ const CustomerForm = ({ errors, touched }) => {
             required
             component="select"
             className={
-            `form-control ${
+            `custom-select form-control ${
               errors.customer && errors.customer.address && errors.customer.address.country && touched.customer && touched.customer.address && touched.customer.address.country && 'is-invalid'}`
           }
             name="customer.address.country"

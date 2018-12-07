@@ -7,14 +7,33 @@ const HotelContact = ({ contact }) => {
     <li key={c.title}>
       <strong>{c.title}</strong>
 :
+      {' '}
       {c.value}
     </li>
   ));
   return (
     <ul className="list-unstyled">
-      {contact.email && <li><a href={`mailto:${contact.email}`}>{contact.email}</a></li>}
-      {contact.phone && <li><a href={`tel:${contact.phone}`}>{contact.phone}</a></li>}
-      {contact.url && <li><a href={contact.url} target="_blank" rel="noopener noreferrer">{contact.url}</a></li>}
+      {contact.email && (
+      <li>
+        <i className="mdi mdi-email" />
+        {' '}
+        <a href={`mailto:${contact.email}`}>{contact.email}</a>
+      </li>
+      )}
+      {contact.phone && (
+      <li>
+        <i className="mdi mdi-phone" />
+        {' '}
+        <a href={`tel:${contact.phone}`}>{contact.phone}</a>
+      </li>
+      )}
+      {contact.url && (
+      <li>
+        <i className="mdi mdi-web" />
+        {' '}
+        <a href={contact.url} target="_blank" rel="noopener noreferrer">{contact.url}</a>
+      </li>
+      )}
       {additionalContacts && <li><ul>{additionalContacts}</ul></li>}
     </ul>
   );
