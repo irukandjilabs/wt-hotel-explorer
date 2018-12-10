@@ -2,6 +2,7 @@ const defaultState = {
   global: {},
   hotels: {},
   booking: undefined,
+  search: undefined,
 };
 
 const reducer = (state = defaultState, action) => {
@@ -47,6 +48,14 @@ const reducer = (state = defaultState, action) => {
     case 'SEND_BOOKING_SUCCEEDED':
       return Object.assign({}, state, {
         booking: undefined,
+      });
+    case 'SEARCH_HOTELS_BY_LOCATION_FAILED':
+      return Object.assign({}, state, {
+        search: action.payload.message,
+      });
+    case 'SEARCH_HOTELS_BY_LOCATION_STARTED':
+      return Object.assign({}, state, {
+        search: undefined,
       });
     default:
       return state;

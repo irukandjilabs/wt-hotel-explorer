@@ -84,7 +84,7 @@ class SearchForm extends React.PureComponent {
 
   render() {
     const {
-      isSubmitting, bboxSide, selectedPoint,
+      isSubmitting, bboxSide, selectedPoint, lookupError,
     } = this.state;
     const examples = Object.keys(this.examples).map(ex => (
       <button
@@ -98,53 +98,69 @@ class SearchForm extends React.PureComponent {
     ));
 
     return (
-      <form className="mb-1" onSubmit={this.doSubmit}>
-        <div className="form-row">
-          <div className="col-md-6">
-            <label htmlFor="centerpoint">Hotels near</label>
-            <AddressTypeahead
-              onChange={(val) => {
-                if (val.length && val[0].geometry && val[0].geometry.coordinates) {
+      <React.Fragment>
+        {lookupError && (
+          <div className="row mt-1">
+            <div className="col-md-12">
+              <div className="alert alert-danger">{`Cannot search for locations: ${lookupError}`}</div>
+            </div>
+          </div>
+        )}
+
+        <form className="mb-1" onSubmit={this.doSubmit}>
+          <div className="form-row">
+            <div className="col-md-6">
+              <label htmlFor="centerpoint">Hotels near</label>
+              <AddressTypeahead
+                onChange={(val) => {
+                  if (val.length && val[0].geometry && val[0].geometry.coordinates) {
+                    this.setState({
+                      selectedPoint: val,
+                      lookupError: undefined,
+                    });
+                  }
+                }}
+                onError={(message) => {
                   this.setState({
-                    selectedPoint: val,
+                    lookupError: message,
                   });
-                }
-              }}
-              defaultSelected={selectedPoint}
-              inputProps={{ name: 'centerpoint', id: 'centerpoint', disabled: isSubmitting }}
-            />
+                }}
+                defaultSelected={selectedPoint}
+                inputProps={{ name: 'centerpoint', id: 'centerpoint', disabled: isSubmitting }}
+              />
+            </div>
+            <div className="col-md-3">
+              <label htmlFor="bboxSide">Search box side size (KM)</label>
+              <input
+                disabled={isSubmitting}
+                type="number"
+                min="5"
+                max="200"
+                className="form-control"
+                name="bboxSide"
+                id="bboxSide"
+                value={bboxSide}
+                onChange={this.handleBboxSideChange}
+                placeholder="20"
+              />
+            </div>
+            <div className="col-md-3">
+              <button
+                style={{ marginTop: '32px' }}
+                type="submit"
+                className="btn btn-primary form-control"
+                disabled={!bboxSide || !(selectedPoint.length)}
+              >
+                {isSubmitting ? <Loader /> : <span>Search</span>}
+              </button>
+            </div>
           </div>
-          <div className="col-md-3">
-            <label htmlFor="bboxSide">Search box side size (KM)</label>
-            <input
-              disabled={isSubmitting}
-              type="number"
-              min="5"
-              max="200"
-              className="form-control"
-              name="bboxSide"
-              id="bboxSide"
-              value={bboxSide}
-              onChange={this.handleBboxSideChange}
-              placeholder="20"
-            />
+          <div className="mt-1">
+            <strong className="mr-1">Examples:</strong>
+            {examples}
           </div>
-          <div className="col-md-3">
-            <button
-              style={{ marginTop: '32px' }}
-              type="submit"
-              className="btn btn-primary form-control"
-              disabled={!bboxSide || !(selectedPoint.length)}
-            >
-              {isSubmitting ? <Loader /> : <span>Search</span>}
-            </button>
-          </div>
-        </div>
-        <div className="mt-1">
-          <strong className="mr-1">Examples:</strong>
-          {examples}
-        </div>
-      </form>
+        </form>
+      </React.Fragment>
     );
   }
 }

@@ -25,7 +25,7 @@ export const translateNetworkError = (status, code, message) => {
 const paginatedFetchSearchResults = url => fetch(url)
   .then((r) => {
     if (r.status > 299) {
-      throw translateNetworkError(r.status, 'Cannot search hotels!');
+      throw translateNetworkError(r.status, r.code, r.message);
     }
     return r.json();
   }).then((data) => {
