@@ -48,9 +48,9 @@ class Hotel extends React.PureComponent {
               hotel={hotel}
               estimates={estimates}
               errors={errors}
+              guestFormInitialValues={guestFormInitialValues}
               handleGuestFormSubmit={handleGuestFormSubmit}
               handleCancellationFormSubmit={handleCancellationFormSubmit}
-              guestFormInitialValues={guestFormInitialValues}
               handleBookRoomTypeClicked={this.startBookingWizard}
             />
           )}
@@ -85,7 +85,7 @@ export default withRouter(connect(
     return {
       hotel: getHotelById(state, hotelId),
       estimates: selectors.estimates.getCurrentByHotelId(state, hotelId),
-      errors: state.errors.hotels[hotelId],
+      errors: selectors.errors.getByHotelId(state, hotelId),
       guestFormInitialValues: selectors.booking.getGuestData(state),
     };
   },

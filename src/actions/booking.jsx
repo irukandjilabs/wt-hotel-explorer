@@ -121,7 +121,7 @@ export const submitBooking = values => (dispatch, getState) => {
       guests: values.booking.guestInfo,
     },
   });
-  const { _formActions, ...bookingData } = values;
+  const { ...bookingData } = values;
   dispatch(sendBooking({
     bookingUri: hotel.bookingUri,
     bookingData,
