@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { geolocated, geoPropTypes } from 'react-geolocated';
 
 import HotelsMap from './hotels-map';
 import SearchForm from './search-form';
@@ -15,6 +16,25 @@ class MapSearch extends React.PureComponent {
   constructor(props) {
     super(props);
     this.performSearch = this.performSearch.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    const { coords } = this.props;
+    const { coords: prevCoords } = prevProps;
+    if (coords !== prevCoords) {
+      fetch(`https://photon.komoot.de/reverse?lon=${coords.longitude}&lat=${coords.latitude}`)
+        .then(resp => resp.json())
+        .then((json) => {
+          if (json.features && json.features.length) {
+            const formatName = n => `${n.properties.city || n.properties.name}, ${n.properties.country}`;
+            this.performSearch(
+              formatName(json.features[0]),
+              [coords.longitude, coords.latitude],
+              30,
+            );
+          }
+        });
+    }
   }
 
   performSearch(centerPoint, centerCoords, bboxSide) {
@@ -96,6 +116,12 @@ MapSearch.propTypes = {
   handleSearchFormSubmit: PropTypes.func.isRequired,
   results: PropTypes.instanceOf(Array),
   sortedResults: PropTypes.instanceOf(Array),
+  ...geoPropTypes,
 };
 
-export default MapSearch;
+export default geolocated({
+  positionOptions: {
+    enableHighAccuracy: false,
+  },
+  userDecisionTimeout: 10000,
+})(MapSearch);

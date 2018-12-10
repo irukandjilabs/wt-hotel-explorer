@@ -9,7 +9,7 @@ class SearchForm extends React.PureComponent {
   state = {
     isSubmitting: false,
     selectedPoint: [],
-    bboxSide: 20,
+    bboxSide: 30,
   };
 
   examples = {
