@@ -13,7 +13,7 @@ const RoomTypeImageModal = ({ roomType, index }) => (
           </button>
         </div>
         <div className="modal-body d-flex align-items-center animated fadeIn">
-          <ImageList list={roomType.images} withIndicators />
+          <ImageList list={roomType.images || []} withIndicators />
         </div>
       </div>
     </div>
