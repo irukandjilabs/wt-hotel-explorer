@@ -9,7 +9,7 @@ import {
   HttpInternalServerError,
 } from '../services/errors';
 
-import { computeCancellationFees } from '../services/cancellation-fees';
+import { cancellationFees } from '@windingtree/wt-pricing-algorithms';
 
 export const setGuestData = ({ arrival, departure, guests }) => (dispatch) => {
   dispatch({
@@ -47,7 +47,7 @@ export const determineCancellationFees = ({ hotelId }) => (dispatch, getState) =
     return;
   }
   const arrivalDayjs = state.booking.guest.helpers.arrivalDateDayjs;
-  const cancellationFees = computeCancellationFees(
+  const fees = cancellationFees.determine(
     dayjs(), // today
     arrivalDayjs,
     hotel.cancellationPolicies,
@@ -57,7 +57,7 @@ export const determineCancellationFees = ({ hotelId }) => (dispatch, getState) =
     type: 'SET_CANCELLATION_FEES',
     payload: {
       hotelId,
-      fees: cancellationFees,
+      fees: fees,
     },
   });
 };

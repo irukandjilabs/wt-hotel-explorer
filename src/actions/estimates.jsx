@@ -1,5 +1,5 @@
 import { fetchHotelRatePlans, fetchHotelRoomTypes, fetchHotelAvailability } from './hotels';
-import { computePrices } from '../services/pricing-algorithm';
+import { prices } from '@windingtree/wt-pricing-algorithms';
 import { enhancePricingEstimates } from '../services/availability';
 
 export const recomputeHotelEstimates = ({ id }) => (dispatch, getState) => {
@@ -22,7 +22,7 @@ export const recomputeHotelEstimates = ({ id }) => (dispatch, getState) => {
   ) {
     return;
   }
-  const pricingEstimates = computePrices(guestData, hotel);
+  const pricingEstimates = prices.determine(guestData, hotel);
   dispatch({
     type: 'SET_ESTIMATES',
     payload: {
