@@ -1,5 +1,5 @@
-import { fetchHotelRatePlans, fetchHotelRoomTypes, fetchHotelAvailability } from './hotels';
 import { prices } from '@windingtree/wt-pricing-algorithms';
+import { fetchHotelRatePlans, fetchHotelRoomTypes, fetchHotelAvailability } from './hotels';
 import { enhancePricingEstimates } from '../services/availability';
 
 export const recomputeHotelEstimates = ({ id }) => (dispatch, getState) => {

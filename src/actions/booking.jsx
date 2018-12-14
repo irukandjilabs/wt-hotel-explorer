@@ -1,6 +1,7 @@
 import { createActionThunk } from 'redux-thunk-actions';
 import dayjs from 'dayjs';
 
+import { cancellationFees } from '@windingtree/wt-pricing-algorithms';
 import {
   HttpError,
   Http404Error,
@@ -9,7 +10,6 @@ import {
   HttpInternalServerError,
 } from '../services/errors';
 
-import { cancellationFees } from '@windingtree/wt-pricing-algorithms';
 
 export const setGuestData = ({ arrival, departure, guests }) => (dispatch) => {
   dispatch({
@@ -57,7 +57,7 @@ export const determineCancellationFees = ({ hotelId }) => (dispatch, getState) =
     type: 'SET_CANCELLATION_FEES',
     payload: {
       hotelId,
-      fees: fees,
+      fees,
     },
   });
 };
