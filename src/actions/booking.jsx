@@ -47,7 +47,7 @@ export const determineCancellationFees = ({ hotelId }) => (dispatch, getState) =
     return;
   }
   const arrivalDayjs = state.booking.guest.helpers.arrivalDateDayjs;
-  const fees = cancellationFees.determine(
+  const fees = cancellationFees.computeCancellationFees(
     dayjs(), // today
     arrivalDayjs,
     hotel.cancellationPolicies,
