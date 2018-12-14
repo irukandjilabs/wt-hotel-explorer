@@ -69,7 +69,7 @@ export const translateNetworkError = (status, code, message) => {
   if (status === 404) {
     return new Http404Error(code, message);
   }
-  // Consider 422 as a 404
+  // Consider 422 as a 409
   if (status === 409 || status === 422) {
     return new HttpConflictError(code, message);
   }
@@ -99,6 +99,7 @@ export const sendBooking = createActionThunk('SEND_BOOKING', ({ bookingData, boo
     })
     .then(data => ({
       id: data.id,
+      status: data.status,
     }));
 });
 
@@ -120,16 +121,35 @@ export const submitBooking = values => (dispatch, getState) => {
       guests: values.booking.guestInfo,
     },
   });
-  const { _formActions, ...bookingData } = values;
+  const { ...bookingData } = values;
   dispatch(sendBooking({
     bookingUri: hotel.bookingUri,
     bookingData,
   }));
 };
 
+export const cancelBooking = createActionThunk('CANCEL_BOOKING', (values) => {
+  const url = `${values.bookingUri}/booking/${values.bookingId}`;
+  return fetch(url, {
+    method: 'DELETE',
+  })
+    .then((response) => {
+      if (response.status === 204) {
+        return { status: 204, code: 'ok' };
+      }
+      return response.json();
+    })
+    .then((response) => {
+      values.finalize(response.status <= 299, response.code);
+    }, () => {
+      values.finalize(false, undefined);
+    });
+});
+
 export default {
   setGuestData,
   addRoomType,
   determineCancellationFees,
   submitBooking,
+  cancelBooking,
 };

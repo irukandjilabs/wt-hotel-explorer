@@ -33,6 +33,10 @@ class MapSearch extends React.PureComponent {
               30,
             );
           }
+        }).catch((e) => {
+          this.setState({
+            lookupError: e.message,
+          });
         });
     }
   }
@@ -54,8 +58,10 @@ class MapSearch extends React.PureComponent {
   }
 
   render() {
-    const { submittedCenterCoords, submittedBboxSide, submittedCenterPoint } = this.state;
-    const { results, sortedResults } = this.props;
+    const {
+      submittedCenterCoords, submittedBboxSide, submittedCenterPoint, lookupError,
+    } = this.state;
+    const { results, sortedResults, searchError } = this.props;
     const sortedResultsRows = sortedResults.map(s => (
       <tr key={s.id}>
         <td><Link to={`hotels/${s.id}`}>{s.hotel.name}</Link></td>
@@ -72,6 +78,20 @@ class MapSearch extends React.PureComponent {
             <SearchForm onSubmit={this.performSearch} />
           </div>
         </div>
+        {lookupError && (
+          <div className="row mt-1">
+            <div className="col-md-12">
+              <div className="alert alert-danger">{`Cannot lookup location: ${lookupError}`}</div>
+            </div>
+          </div>
+        )}
+        {searchError && (
+          <div className="row mt-1">
+            <div className="col-md-12">
+              <div className="alert alert-danger">{`Cannot search hotels: ${searchError}`}</div>
+            </div>
+          </div>
+        )}
         <div className="row">
           <div className="col-md-12 map-container-lg">
             {(submittedBboxSide && (
@@ -110,12 +130,14 @@ class MapSearch extends React.PureComponent {
 MapSearch.defaultProps = {
   results: [],
   sortedResults: [],
+  searchError: undefined,
 };
 
 MapSearch.propTypes = {
   handleSearchFormSubmit: PropTypes.func.isRequired,
   results: PropTypes.instanceOf(Array),
   sortedResults: PropTypes.instanceOf(Array),
+  searchError: PropTypes.string,
   ...geoPropTypes,
 };
 

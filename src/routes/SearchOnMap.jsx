@@ -8,13 +8,16 @@ import actions from '../actions';
 import ScrollToTopOnMount from '../components/ScrollToTopOnMount';
 import MapSearch from '../components/MapSearch';
 
-const SearchOnMap = ({ handleSearchFormSubmit, results, sortedResults }) => (
+const SearchOnMap = ({
+  handleSearchFormSubmit, results, sortedResults, searchError,
+}) => (
   <React.Fragment>
     <ScrollToTopOnMount />
     <MapSearch
       handleSearchFormSubmit={handleSearchFormSubmit}
       results={results}
       sortedResults={sortedResults}
+      searchError={searchError}
     />
   </React.Fragment>
 );
@@ -22,12 +25,14 @@ const SearchOnMap = ({ handleSearchFormSubmit, results, sortedResults }) => (
 SearchOnMap.defaultProps = {
   results: [],
   sortedResults: [],
+  searchError: undefined,
 };
 
 SearchOnMap.propTypes = {
   handleSearchFormSubmit: PropTypes.func.isRequired,
   results: PropTypes.instanceOf(Array),
   sortedResults: PropTypes.instanceOf(Array),
+  searchError: PropTypes.string,
 };
 
 export default connect(
@@ -38,6 +43,7 @@ export default connect(
     return {
       results: filterHotels(state, searchResults),
       sortedResults: selectors.search.getSortedResults(state, getHotel),
+      searchError: selectors.errors.getSearch(state),
     };
   },
   dispatch => ({

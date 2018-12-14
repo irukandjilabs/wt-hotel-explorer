@@ -22,7 +22,7 @@ class BookingWizard extends React.PureComponent {
   render() {
     const {
       hotel, guestData, hotelBookingData, customerData,
-      estimates, handleBookingFormSubmit,
+      estimates, handleBookingFormSubmit, error,
     } = this.props;
 
     if (customerData.lastBookingId) {
@@ -42,6 +42,7 @@ class BookingWizard extends React.PureComponent {
         {guestData && hotel && estimates && customerData && (
           <BookingForm
             guestData={guestData}
+            error={error}
             hotelBookingData={hotelBookingData}
             hotel={hotel}
             estimates={estimates}
@@ -60,6 +61,7 @@ BookingWizard.defaultProps = {
   estimates: [],
   hotelBookingData: undefined,
   customerData: undefined,
+  error: undefined,
 };
 
 BookingWizard.propTypes = {
@@ -70,6 +72,7 @@ BookingWizard.propTypes = {
   customerData: PropTypes.instanceOf(Object),
   handleBookingFormSubmit: PropTypes.func.isRequired,
   history: PropTypes.instanceOf(Object).isRequired,
+  error: PropTypes.string,
 };
 
 export default connect(
@@ -82,6 +85,7 @@ export default connect(
       guestData: selectors.booking.getGuestData(state),
       customerData: selectors.booking.getCustomerData(state),
       hotelBookingData,
+      error: selectors.errors.getBooking(state),
     };
   },
   dispatch => ({
