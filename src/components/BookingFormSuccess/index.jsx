@@ -14,9 +14,18 @@ const BookingFormSuccess = ({ customerData }) => (
           <p>
 For further communication with the hotel, please use
             {' '}
-            <strong>{customerData.lastBookingId}</strong>
+            <strong>
+              {customerData.lastBookingId}
+            </strong>
             {' '}
-as a reference.
+as a reference. Your order is in
+            {' '}
+            {customerData.lastBookingStatus}
+            {' '}
+state which means that
+            {' '}
+            {customerData.lastBookingStatus === 'pending' && (<span>the hotel accepted your request and will contact you with further information.</span>)}
+            {customerData.lastBookingStatus === 'confirmed' && (<span>the hotel accepted your request and awaits your arrival.</span>)}
           </p>
         </div>
       </div>
