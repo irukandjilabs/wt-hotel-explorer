@@ -1,6 +1,8 @@
 const defaultState = {
-  errorPage: {},
+  global: {},
   hotels: {},
+  booking: undefined,
+  search: undefined,
 };
 
 const reducer = (state = defaultState, action) => {
@@ -9,14 +11,14 @@ const reducer = (state = defaultState, action) => {
   switch (action.type) {
     case 'FETCH_DETAIL_FAILED':
       return Object.assign({}, state, {
-        errorPage: {
+        global: {
           status: action.payload.status,
           message: action.payload.message,
         },
       });
     case 'FETCH_LIST_FAILED':
       return Object.assign({}, state, {
-        errorPage: {
+        global: {
           status: action.payload.status,
           message: action.payload.message,
         },
@@ -38,6 +40,23 @@ const reducer = (state = defaultState, action) => {
       modifiedHotels = Object.assign({}, state.hotels);
       delete modifiedHotels[action.payload.id];
       return state;
+    case 'SEND_BOOKING_FAILED':
+      return Object.assign({}, state, {
+        booking: action.payload.message,
+      });
+    case 'SEND_BOOKING_STARTED':
+    case 'SEND_BOOKING_SUCCEEDED':
+      return Object.assign({}, state, {
+        booking: undefined,
+      });
+    case 'SEARCH_HOTELS_BY_LOCATION_FAILED':
+      return Object.assign({}, state, {
+        search: action.payload.message,
+      });
+    case 'SEARCH_HOTELS_BY_LOCATION_STARTED':
+      return Object.assign({}, state, {
+        search: undefined,
+      });
     default:
       return state;
   }

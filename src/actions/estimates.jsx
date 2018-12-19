@@ -1,5 +1,6 @@
+import dayjs from 'dayjs';
+import { prices } from '@windingtree/wt-pricing-algorithms';
 import { fetchHotelRatePlans, fetchHotelRoomTypes, fetchHotelAvailability } from './hotels';
-import { computePrices } from '../services/pricing-algorithm';
 import { enhancePricingEstimates } from '../services/availability';
 
 export const recomputeHotelEstimates = ({ id }) => (dispatch, getState) => {
@@ -22,7 +23,24 @@ export const recomputeHotelEstimates = ({ id }) => (dispatch, getState) => {
   ) {
     return;
   }
-  const pricingEstimates = computePrices(guestData, hotel);
+
+  const pricingEstimates = prices.computePrices(
+    dayjs(),
+    guestData.helpers.arrivalDateDayjs,
+    guestData.helpers.departureDateDayjs,
+    guestData.guests,
+    Object.values(hotel.roomTypes),
+    Object.values(hotel.ratePlans),
+    hotel.currency,
+  ).map((pe) => {
+    if (!pe.prices || !pe.prices.length) {
+      return pe;
+    }
+    return Object.assign(pe, {
+      currency: pe.prices[0].currency,
+      price: pe.prices[0].total,
+    });
+  });
   dispatch({
     type: 'SET_ESTIMATES',
     payload: {

@@ -36,6 +36,7 @@ class Hotel extends React.PureComponent {
     const {
       hotel, estimates, errors,
       handleGuestFormSubmit, guestFormInitialValues,
+      handleCancellationFormSubmit,
     } = this.props;
     return (
       <Fragment>
@@ -47,8 +48,9 @@ class Hotel extends React.PureComponent {
               hotel={hotel}
               estimates={estimates}
               errors={errors}
-              handleGuestFormSubmit={handleGuestFormSubmit}
               guestFormInitialValues={guestFormInitialValues}
+              handleGuestFormSubmit={handleGuestFormSubmit}
+              handleCancellationFormSubmit={handleCancellationFormSubmit}
               handleBookRoomTypeClicked={this.startBookingWizard}
             />
           )}
@@ -72,6 +74,7 @@ Hotel.propTypes = {
   handleGuestFormSubmit: PropTypes.func.isRequired,
   guestFormInitialValues: PropTypes.instanceOf(Object).isRequired,
   handleBookRoomTypeClicked: PropTypes.func.isRequired,
+  handleCancellationFormSubmit: PropTypes.func.isRequired,
   history: PropTypes.instanceOf(Object).isRequired,
 };
 
@@ -82,7 +85,7 @@ export default withRouter(connect(
     return {
       hotel: getHotelById(state, hotelId),
       estimates: selectors.estimates.getCurrentByHotelId(state, hotelId),
-      errors: state.errors.hotels[hotelId],
+      errors: selectors.errors.getByHotelId(state, hotelId),
       guestFormInitialValues: selectors.booking.getGuestData(state),
     };
   },
@@ -95,6 +98,9 @@ export default withRouter(connect(
     handleBookRoomTypeClicked: (values) => {
       dispatch(actions.booking.addRoomType(values));
       dispatch(actions.booking.determineCancellationFees(values));
+    },
+    handleCancellationFormSubmit: (values) => {
+      dispatch(actions.booking.cancelBooking(values));
     },
   }),
 )(Hotel));

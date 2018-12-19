@@ -15,6 +15,7 @@ class AddressTypeahead extends React.PureComponent {
   }
 
   resolveQuery(query) {
+    const { onError } = this.props;
     fetch(`https://photon.komoot.de/api/?q=${query}`)
       .then(resp => resp.json())
       .then((json) => {
@@ -22,6 +23,10 @@ class AddressTypeahead extends React.PureComponent {
           isLoading: false,
           options: json.features,
         });
+      }).catch((e) => {
+        if (onError) {
+          onError(e.message);
+        }
       });
   }
 
@@ -61,10 +66,12 @@ class AddressTypeahead extends React.PureComponent {
 AddressTypeahead.defaultProps = {
   inputProps: {},
   defaultSelected: [],
+  onError: undefined,
 };
 
 AddressTypeahead.propTypes = {
   onChange: PropTypes.func.isRequired,
+  onError: PropTypes.func,
   defaultSelected: PropTypes.instanceOf(Array),
   inputProps: PropTypes.instanceOf(Object),
 };

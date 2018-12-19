@@ -11,7 +11,7 @@ import GuestForm from '../GuestForm';
 // TODO use cancellationPolicies + defaultCancellationAmount
 const HotelDetail = ({
   hotel, estimates, errors, handleGuestFormSubmit, guestFormInitialValues,
-  handleBookRoomTypeClicked,
+  handleBookRoomTypeClicked, handleCancellationFormSubmit,
 }) => (
   <React.Fragment>
     <header className="row">
@@ -61,7 +61,7 @@ const HotelDetail = ({
     </div>
 
     <ScrollAnimation animateIn="fadeIn" animateOnce className="col">
-      <HotelInfoBox hotel={hotel} />
+      <HotelInfoBox hotel={hotel} handleCancellationFormSubmit={handleCancellationFormSubmit} />
     </ScrollAnimation>
   </React.Fragment>
 );
@@ -76,6 +76,7 @@ HotelDetail.propTypes = {
   estimates: PropTypes.instanceOf(Array),
   errors: PropTypes.instanceOf(Array),
   handleGuestFormSubmit: PropTypes.func.isRequired,
+  handleCancellationFormSubmit: PropTypes.func.isRequired,
   guestFormInitialValues: PropTypes.instanceOf(Object).isRequired,
   handleBookRoomTypeClicked: PropTypes.func.isRequired,
 };
