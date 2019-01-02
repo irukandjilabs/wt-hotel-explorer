@@ -8,7 +8,8 @@ export const QuantityBadge = ({ quantity }) => {
         <i className="mdi mdi-close-octagon text-danger" />
         {' '}
         <em>Sold out!</em>
-      </React.Fragment>);
+      </React.Fragment>
+    );
   }
   if (quantity < 3) {
     return (
@@ -22,7 +23,8 @@ Last
           {' '}
 remaining!
         </em>
-      </React.Fragment>);
+      </React.Fragment>
+    );
   }
   if (quantity === undefined) {
     return (
@@ -30,7 +32,8 @@ remaining!
         <i className="mdi mdi-alert-circle-outline text-muted" />
         {' '}
         <em>Availability unknown</em>
-      </React.Fragment>);
+      </React.Fragment>
+    );
   }
   return null;
 };

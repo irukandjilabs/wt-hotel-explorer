@@ -10,7 +10,8 @@ const ImageList = ({ list, height, withIndicators }) => {
       list={imageList}
       height={height}
       withIndicators={withIndicators}
-    />);
+    />
+  );
 };
 
 ImageList.defaultProps = {
