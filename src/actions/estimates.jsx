@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
-import { prices } from '@windingtree/wt-pricing-algorithms';
+import { prices, availability } from '@windingtree/wt-pricing-algorithms';
 import { fetchHotelRatePlans, fetchHotelRoomTypes, fetchHotelAvailability } from './hotels';
-import { enhancePricingEstimates } from '../services/availability';
 
 export const recomputeHotelEstimates = ({ id }) => (dispatch, getState) => {
   const state = getState();
@@ -41,17 +40,31 @@ export const recomputeHotelEstimates = ({ id }) => (dispatch, getState) => {
       price: pe.prices[0].total,
     });
   });
+
+  const quantities = hotel.availability && hotel.availability.availability
+    ? availability.computeAvailability(
+      guestData.arrival,
+      guestData.departure,
+      guestData.guests.length,
+      Object.values(hotel.roomTypes),
+      hotel.availability.availability,
+    ) : [];
   dispatch({
     type: 'SET_ESTIMATES',
     payload: {
       id,
-      data: enhancePricingEstimates(guestData, pricingEstimates, hotel),
+      data: pricingEstimates.map((pd) => {
+        const quantityWrapper = quantities.find(q => q.roomTypeId === pd.id);
+        return Object.assign({}, pd, {
+          quantity: quantityWrapper ? quantityWrapper.quantity : undefined,
+        });
+      }),
     },
   });
 };
 
 export const fetchAndComputeHotelEstimates = ({
-  id, ratePlans, roomTypes, availability,
+  id, ratePlans, roomTypes, availabilityData,
 }) => (dispatch) => {
   let ratePlansPromise;
   let roomTypesPromise;
@@ -71,7 +84,7 @@ export const fetchAndComputeHotelEstimates = ({
     roomTypesPromise = dispatch(fetchHotelRoomTypes({ id })).catch(() => {});
   }
   // Do not hit hotels with availability already downloaded
-  if (availability) {
+  if (availabilityData) {
     availabilityPromise = Promise.resolve();
   } else {
     // silent catch, the errors are dealt with in appropriate reducers

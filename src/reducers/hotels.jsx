@@ -1,3 +1,5 @@
+import { availability } from '@windingtree/wt-pricing-algorithms';
+
 const defaultState = {
   erroredHotels: {},
   list: [],
@@ -32,20 +34,15 @@ const transformRoomTypes = roomTypes => indexById(roomTypes);
 const transformRatePlans = ratePlans => indexById(ratePlans);
 
 const transformAvailability = (responseData) => {
-  // re-index availability by date for easier later access
   if (responseData.roomTypes) {
-    const result = responseData.roomTypes.reduce((agg, curr) => Object.assign({}, agg, {
-      [curr.roomTypeId]: Object.assign({}, agg[curr.roomTypeId], {
-        [curr.date]: curr,
-      }),
-    }), {});
     return {
       updatedAt: responseData.updatedAt,
-      availability: result,
+      availability: availability.indexAvailability(responseData.roomTypes),
     };
   }
   return responseData;
 };
+
 
 const reducer = (state = defaultState, action) => {
   let modifiedList;
