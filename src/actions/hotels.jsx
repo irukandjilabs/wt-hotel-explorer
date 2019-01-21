@@ -17,6 +17,7 @@ const LIST_FIELDS = [
   'description',
   'images',
   'bookingUri',
+  'currency',
 ];
 
 const DETAIL_FIELDS = [
@@ -32,6 +33,7 @@ const DETAIL_FIELDS = [
   'defaultCancellationAmount',
   'cancellationPolicies',
   'roomTypes',
+  'currency',
 ];
 
 export const translateNetworkError = (status, code, message) => {

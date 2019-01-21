@@ -22,7 +22,7 @@
   "license": "MIT",
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
-    "@windingtree/wt-pricing-algorithms": "^0.3.1",
+    "@windingtree/wt-pricing-algorithms": "^0.4.2",
     "@windingtree/wt-ui": "^1.2.1",
     "animate.css": "^3.7.0",
     "bootstrap": "^4.1.3",

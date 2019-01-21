@@ -23,14 +23,17 @@ export const recomputeHotelEstimates = ({ id }) => (dispatch, getState) => {
     return;
   }
 
-  const pricingEstimates = prices.computePrices(
+  const computer = new prices.PriceComputer(
+    Object.values(hotel.roomTypes),
+    Object.values(hotel.ratePlans),
+    hotel.currency,
+  );
+
+  const pricingEstimates = computer.getBestPrice(
     dayjs(),
     guestData.helpers.arrivalDateDayjs,
     guestData.helpers.departureDateDayjs,
     guestData.guests,
-    Object.values(hotel.roomTypes),
-    Object.values(hotel.ratePlans),
-    hotel.currency,
   ).map((pe) => {
     if (!pe.prices || !pe.prices.length) {
       return pe;
