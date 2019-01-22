@@ -8,8 +8,7 @@ export const recomputeHotelEstimates = ({ id }) => (dispatch, getState) => {
   if (!hotel) {
     return;
   }
-  const { roomTypes, ratePlans } = hotel;
-  if (!roomTypes || !ratePlans) {
+  if (!hotel.roomTypes || !hotel.ratePlans) {
     return;
   }
   const { guest: guestData } = state.booking;
@@ -24,8 +23,8 @@ export const recomputeHotelEstimates = ({ id }) => (dispatch, getState) => {
   }
 
   const computer = new prices.PriceComputer(
-    Object.values(hotel.roomTypes),
-    Object.values(hotel.ratePlans),
+    hotel.roomTypes,
+    hotel.ratePlans,
     hotel.currency,
   );
 
@@ -49,7 +48,7 @@ export const recomputeHotelEstimates = ({ id }) => (dispatch, getState) => {
       guestData.arrival,
       guestData.departure,
       guestData.guests.length,
-      Object.values(hotel.roomTypes),
+      hotel.roomTypes,
       hotel.availability.availability,
     ) : [];
   dispatch({

@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import RoomType from './room-type';
 
 const RoomTypes = ({ hotel, estimates, onBookRoomTypeClicked }) => {
-  const roomTypes = hotel.roomTypes && Object.values(hotel.roomTypes)
+  if (!hotel.roomTypes) {
+    return [];
+  }
+  return hotel.roomTypes
     .map((rt, index) => (
       <RoomType
         hotel={hotel}
@@ -14,8 +17,8 @@ const RoomTypes = ({ hotel, estimates, onBookRoomTypeClicked }) => {
         onBookRoomTypeClicked={onBookRoomTypeClicked}
       />
     ));
-  return roomTypes && roomTypes;
 };
+
 
 RoomTypes.propTypes = {
   hotel: PropTypes.instanceOf(Object).isRequired,

@@ -135,6 +135,7 @@ const BookingForm = ({
         {({
           isSubmitting, values, errors, touched,
         }) => {
+          const roomType = hotel.roomTypes.find(rt => rt.id === values.booking.rooms[0].id);
           let showSpinner = isSubmitting;
           if (error) {
             showSpinner = false;
@@ -148,7 +149,9 @@ const BookingForm = ({
                   <div className="col-md-12">
                     <div className="card">
                       <div className="card-body">
-                        <RoomType roomType={hotel.roomTypes[values.booking.rooms[0].id]} />
+                        <RoomType
+                          roomType={roomType}
+                        />
                       </div>
                     </div>
                     <div className="card">
