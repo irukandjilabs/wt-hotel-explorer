@@ -1,3 +1,5 @@
+import { availability } from '@windingtree/wt-pricing-algorithms';
+
 const defaultState = {
   erroredHotels: {},
   list: [],
@@ -18,34 +20,16 @@ const remapErroredIds = list => list
     });
   }, {});
 
-const indexById = (data) => {
-  if (!data) {
-    return data;
-  }
-  return data.reduce((agg, curr) => Object.assign({}, agg, {
-    [curr.id]: curr,
-  }), {});
-};
-
-const transformRoomTypes = roomTypes => indexById(roomTypes);
-
-const transformRatePlans = ratePlans => indexById(ratePlans);
-
 const transformAvailability = (responseData) => {
-  // re-index availability by date for easier later access
   if (responseData.roomTypes) {
-    const result = responseData.roomTypes.reduce((agg, curr) => Object.assign({}, agg, {
-      [curr.roomTypeId]: Object.assign({}, agg[curr.roomTypeId], {
-        [curr.date]: curr,
-      }),
-    }), {});
     return {
       updatedAt: responseData.updatedAt,
-      availability: result,
+      availability: availability.indexAvailability(responseData.roomTypes),
     };
   }
   return responseData;
 };
+
 
 const reducer = (state = defaultState, action) => {
   let modifiedList;
@@ -79,13 +63,13 @@ const reducer = (state = defaultState, action) => {
             modifiedList[existingIds[action.payload.items[i].id]],
             action.payload.items[i],
             {
-              roomTypes: transformRoomTypes(action.payload.items[i].roomTypes),
+              roomTypes: action.payload.items[i].roomTypes,
             });
         } else {
           modifiedList.push(Object.assign({}, action.payload.items[i], {
             hasDetailLoaded: false,
             hasDetailLoading: false,
-            roomTypes: transformRoomTypes(action.payload.items[i].roomTypes),
+            roomTypes: action.payload.items[i].roomTypes,
           }));
         }
       }
@@ -125,13 +109,13 @@ const reducer = (state = defaultState, action) => {
             modifiedList[existingIds[action.payload.items[i].id]],
             action.payload.items[i],
             {
-              roomTypes: transformRoomTypes(action.payload.items[i].roomTypes),
+              roomTypes: action.payload.items[i].roomTypes,
             });
         } else {
           modifiedList.push(Object.assign({}, action.payload.items[i], {
             hasDetailLoaded: false,
             hasDetailLoading: false,
-            roomTypes: transformRoomTypes(action.payload.items[i].roomTypes),
+            roomTypes: action.payload.items[i].roomTypes,
           }));
         }
         // Drop successfully refreshed hotel from errored
@@ -174,7 +158,7 @@ const reducer = (state = defaultState, action) => {
         hotel,
         action.payload,
         {
-          roomTypes: transformRoomTypes(action.payload.roomTypes),
+          roomTypes: action.payload.roomTypes,
         },
       );
       hotel.hasDetailLoaded = true;
@@ -211,7 +195,7 @@ const reducer = (state = defaultState, action) => {
       }
       hotelIndex = modifiedList.indexOf(hotel);
       hotel = Object.assign({}, hotel, {
-        roomTypes: transformRoomTypes(action.payload.data),
+        roomTypes: action.payload.data,
       });
       modifiedList[hotelIndex] = hotel;
       return Object.assign({}, state, {
@@ -225,7 +209,7 @@ const reducer = (state = defaultState, action) => {
       }
       hotelIndex = modifiedList.indexOf(hotel);
       hotel = Object.assign({}, hotel, {
-        ratePlans: transformRatePlans(action.payload.data),
+        ratePlans: action.payload.data,
       });
       modifiedList[hotelIndex] = hotel;
       return Object.assign({}, state, {

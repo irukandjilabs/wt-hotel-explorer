@@ -90,7 +90,7 @@ const BookingForm = ({
     // phone
     if (values.customer && values.customer.phone) {
       // props to https://www.regextester.com/1978
-      if (!/((?:\+|00)[17](?: |-)?|(?:\+|00)[1-9]\d{0,2}(?: |-)?|(?:\+|00)1-\d{3}(?: |-)?)?(0\d|\([0-9]{3}\)|[1-9]{0,3})(?:((?: |-)[0-9]{2}){4}|((?:[0-9]{2}){4})|((?: |-)[0-9]{3}(?: |-)[0-9]{4})|([0-9]{7}))/.test(values.customer.phone)) {
+      if (!/^((?:\+|00)[17](?: |-)?|(?:\+|00)[1-9]\d{0,2}(?: |-)?|(?:\+|00)1-\d{3}(?: |-)?)?(0\d|\([0-9]{3}\)|[1-9]{0,3})(?:((?: |-)[0-9]{2}){4}|((?:[0-9]{2}){4})|((?: |-)[0-9]{3}(?: |-)[0-9]{4})|([0-9]{7}))$/.test(values.customer.phone)) {
         _set(errors, 'customer.phone', 'Invalid phone format!');
       }
     }
@@ -99,14 +99,29 @@ const BookingForm = ({
   };
 
   const doSubmit = (values) => {
-    handleBookingFormSubmit(Object.assign({}, values, {
+    const customer = {
+      name: values.customer.name,
+      surname: values.customer.surname,
+      address: values.customer.address,
+      email: values.customer.email,
+    };
+    if (values.customer.phone !== '') {
+      customer.phone = values.customer.phone;
+    }
+    const bookingData = {
       hotelId: hotel.id,
+      customer,
       pricing: {
         currency: firstRoomEstimate.currency,
         total: firstRoomEstimate.price.value,
         cancellationFees: hotelBookingData.cancellationFees,
       },
-    }));
+      booking: values.booking,
+    };
+    if (values.note !== '') {
+      bookingData.note = values.note;
+    }
+    handleBookingFormSubmit(bookingData);
   };
 
   return (
@@ -135,6 +150,7 @@ const BookingForm = ({
         {({
           isSubmitting, values, errors, touched,
         }) => {
+          const roomType = hotel.roomTypes.find(rt => rt.id === values.booking.rooms[0].id);
           let showSpinner = isSubmitting;
           if (error) {
             showSpinner = false;
@@ -148,7 +164,9 @@ const BookingForm = ({
                   <div className="col-md-12">
                     <div className="card">
                       <div className="card-body">
-                        <RoomType roomType={hotel.roomTypes[values.booking.rooms[0].id]} />
+                        <RoomType
+                          roomType={roomType}
+                        />
                       </div>
                     </div>
                     <div className="card">

@@ -14,7 +14,8 @@ const BookRoomButton = ({ onBookRoomTypeClicked, hotelId, roomTypeId }) => {
   return (
     <button className="btn btn-primary btn-lg btn-block" type="button" onClick={handleClick}>
     Book this room!
-    </button>);
+    </button>
+  );
 };
 
 BookRoomButton.propTypes = {

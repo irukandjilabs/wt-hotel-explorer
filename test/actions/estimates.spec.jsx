@@ -28,8 +28,8 @@ describe('action.estimates', () => {
           list: [{
             id: '0x933198455e38925bccb4bfe9fb59bac31d00b4d3',
             currency: 'CZK',
-            ratePlans: {
-              rpa: {
+            ratePlans: [
+              {
                 id: 'rpa',
                 price: 100,
                 roomTypeIds: ['rtb'],
@@ -42,11 +42,11 @@ describe('action.estimates', () => {
                   to: '2020-12-31',
                 },
               },
-            },
-            roomTypes: {
-              rta: { id: 'rta' },
-              rtb: { id: 'rtb' },
-            },
+            ],
+            roomTypes: [
+              { id: 'rta' },
+              { id: 'rtb' },
+            ],
           }],
         },
       };

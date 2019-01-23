@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
-import { prices } from '@windingtree/wt-pricing-algorithms';
+import { prices, availability } from '@windingtree/wt-pricing-algorithms';
 import { fetchHotelRatePlans, fetchHotelRoomTypes, fetchHotelAvailability } from './hotels';
-import { enhancePricingEstimates } from '../services/availability';
 
 export const recomputeHotelEstimates = ({ id }) => (dispatch, getState) => {
   const state = getState();
@@ -9,8 +8,7 @@ export const recomputeHotelEstimates = ({ id }) => (dispatch, getState) => {
   if (!hotel) {
     return;
   }
-  const { roomTypes, ratePlans } = hotel;
-  if (!roomTypes || !ratePlans) {
+  if (!hotel.roomTypes || !hotel.ratePlans) {
     return;
   }
   const { guest: guestData } = state.booking;
@@ -24,14 +22,17 @@ export const recomputeHotelEstimates = ({ id }) => (dispatch, getState) => {
     return;
   }
 
-  const pricingEstimates = prices.computePrices(
+  const computer = new prices.PriceComputer(
+    hotel.roomTypes,
+    hotel.ratePlans,
+    hotel.currency,
+  );
+
+  const pricingEstimates = computer.getBestPrice(
     dayjs(),
     guestData.helpers.arrivalDateDayjs,
     guestData.helpers.departureDateDayjs,
     guestData.guests,
-    Object.values(hotel.roomTypes),
-    Object.values(hotel.ratePlans),
-    hotel.currency,
   ).map((pe) => {
     if (!pe.prices || !pe.prices.length) {
       return pe;
@@ -41,17 +42,31 @@ export const recomputeHotelEstimates = ({ id }) => (dispatch, getState) => {
       price: pe.prices[0].total,
     });
   });
+
+  const quantities = hotel.availability && hotel.availability.availability
+    ? availability.computeAvailability(
+      guestData.arrival,
+      guestData.departure,
+      guestData.guests.length,
+      hotel.roomTypes,
+      hotel.availability.availability,
+    ) : [];
   dispatch({
     type: 'SET_ESTIMATES',
     payload: {
       id,
-      data: enhancePricingEstimates(guestData, pricingEstimates, hotel),
+      data: pricingEstimates.map((pd) => {
+        const quantityWrapper = quantities.find(q => q.roomTypeId === pd.id);
+        return Object.assign({}, pd, {
+          quantity: quantityWrapper ? quantityWrapper.quantity : undefined,
+        });
+      }),
     },
   });
 };
 
 export const fetchAndComputeHotelEstimates = ({
-  id, ratePlans, roomTypes, availability,
+  id, ratePlans, roomTypes, availabilityData,
 }) => (dispatch) => {
   let ratePlansPromise;
   let roomTypesPromise;
@@ -71,7 +86,7 @@ export const fetchAndComputeHotelEstimates = ({
     roomTypesPromise = dispatch(fetchHotelRoomTypes({ id })).catch(() => {});
   }
   // Do not hit hotels with availability already downloaded
-  if (availability) {
+  if (availabilityData) {
     availabilityPromise = Promise.resolve();
   } else {
     // silent catch, the errors are dealt with in appropriate reducers
