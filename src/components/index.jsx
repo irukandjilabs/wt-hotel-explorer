@@ -1,3 +1,17 @@
+export { default as AmenitiesList } from './AmenitiesList';
+export { default as BookingForm } from './BookingForm';
+export { default as BookingFormSuccess } from './BookingFormSuccess';
+export { default as CancellationForm } from './CancellationForm';
+export { default as Carousel } from './Carousel';
+export { default as GuestForm } from './GuestForm';
+export { default as HotelContacts } from './HotelContacts';
+export { default as HotelDetail } from './HotelDetail';
+export { default as HotelInfoBox } from './HotelInfoBox';
+export { default as HotelLocation } from './HotelLocation';
+export { default as MapSearch } from './MapSearch';
+export { default as RoomTypeImageModal } from './RoomTypeImageModal';
+export { default as RoomTypes } from './RoomTypes';
+export { default as ScrollToTopOnMount } from './ScrollToTopOnMount';
 export { default as Header } from './Header';
 export { default as Footer } from './Footer';
 export { default as Loader } from './Loader';
