@@ -99,14 +99,29 @@ const BookingForm = ({
   };
 
   const doSubmit = (values) => {
-    handleBookingFormSubmit(Object.assign({}, values, {
+    const customer = {
+      name: values.customer.name,
+      surname: values.customer.surname,
+      address: values.customer.address,
+      email: values.customer.email,
+    };
+    if (values.customer.phone !== '') {
+      customer.phone = values.customer.phone;
+    }
+    const bookingData = {
       hotelId: hotel.id,
+      customer,
       pricing: {
         currency: firstRoomEstimate.currency,
         total: firstRoomEstimate.price.value,
         cancellationFees: hotelBookingData.cancellationFees,
       },
-    }));
+      booking: values.booking,
+    };
+    if (values.note !== '') {
+      bookingData.note = values.note;
+    }
+    handleBookingFormSubmit(bookingData);
   };
 
   return (
