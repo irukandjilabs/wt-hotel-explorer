@@ -51,6 +51,7 @@ const GuestInfoForm = ({
           <Field
             aria-label="Age"
             type="number"
+            disabled
             className="form-control"
             name={`booking.guestInfo.${index}.age`}
             id={`booking.guestInfo.${index}.age`}
