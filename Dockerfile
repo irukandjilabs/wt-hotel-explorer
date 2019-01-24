@@ -10,8 +10,7 @@ RUN npm install
 COPY . .
 
 ARG GIT_REV
-ARG WT_READ_API
-ARG WT_SEARCH_API
+ARG NODE_ENV
 
 RUN npm run build
 

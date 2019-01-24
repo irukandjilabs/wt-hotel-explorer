@@ -57,7 +57,7 @@ export const translateNetworkError = (status, code, message) => {
 };
 
 export const fetchHotelsList = createActionThunk('FETCH_LIST', ({ getState }) => {
-  let url = `${process.env.WT_READ_API}/hotels?fields=${LIST_FIELDS.join(',')}&limit=${LIMIT}`;
+  let url = `${window.env.WT_READ_API}/hotels?fields=${LIST_FIELDS.join(',')}&limit=${LIMIT}`;
   const state = getState();
   if (state.hotels.next) {
     url = state.hotels.next;
@@ -71,7 +71,7 @@ export const fetchHotelsList = createActionThunk('FETCH_LIST', ({ getState }) =>
 });
 
 export const fetchHotelDetail = createActionThunk('FETCH_DETAIL', ({ id }) => {
-  const url = `${process.env.WT_READ_API}/hotels/${id}?fields=${DETAIL_FIELDS.join(',')}`;
+  const url = `${window.env.WT_READ_API}/hotels/${id}?fields=${DETAIL_FIELDS.join(',')}`;
   return fetch(url).then((response) => {
     if (response.status > 299) {
       throw translateNetworkError(response.status, id, 'Cannot get hotel detail!');
@@ -104,7 +104,7 @@ export const eventuallyResolveErroredHotels = () => (dispatch, getState) => {
 
 
 export const fetchHotelRatePlans = createActionThunk('FETCH_HOTEL_RATE_PLANS', ({ id }) => {
-  const url = `${process.env.WT_READ_API}/hotels/${id}/ratePlans`;
+  const url = `${window.env.WT_READ_API}/hotels/${id}/ratePlans`;
   return fetch(url)
     .then((response) => {
       if (response.status > 299) {
@@ -119,7 +119,7 @@ export const fetchHotelRatePlans = createActionThunk('FETCH_HOTEL_RATE_PLANS', (
 });
 
 export const fetchHotelAvailability = createActionThunk('FETCH_HOTEL_AVAILABILITY', ({ id }) => {
-  const url = `${process.env.WT_READ_API}/hotels/${id}/availability`;
+  const url = `${window.env.WT_READ_API}/hotels/${id}/availability`;
   return fetch(url)
     .then((response) => {
       if (response.status > 299) {
@@ -134,7 +134,7 @@ export const fetchHotelAvailability = createActionThunk('FETCH_HOTEL_AVAILABILIT
 });
 
 export const fetchHotelRoomTypes = createActionThunk('FETCH_HOTEL_ROOM_TYPES', ({ id }) => {
-  const url = `${process.env.WT_READ_API}/hotels/${id}/roomTypes`;
+  const url = `${window.env.WT_READ_API}/hotels/${id}/roomTypes`;
   return fetch(url)
     .then((response) => {
       if (response.status > 299) {

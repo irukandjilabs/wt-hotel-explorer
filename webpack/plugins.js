@@ -43,7 +43,8 @@ const plugins = [
       resource.request = resource.request
         .replace(/\.TARGET_ROUTER/, `.${targetRouter}`);
     }
-  )
+  ),
+  new CopyWebpackPlugin(['src/env.js']),
 ];
 
 if (isProduction) {
