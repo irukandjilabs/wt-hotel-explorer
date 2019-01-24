@@ -20,8 +20,17 @@ TASK_DEF="[{\"portMappings\": [{\"hostPort\": 0,\"protocol\": \"tcp\",\"containe
           \"awslogs-stream-prefix\": \"$ENVIRONMENT-wt-hotel-explorer\"
         }
       },
-    \"environment\": [],
-    \"image\": \"029479441096.dkr.ecr.$AWS_REGION.amazonaws.com/wt-hotel-explorer:$LATEST_TAG-$ENVIRONMENT\",
+    \"environment\": [
+      {
+        \"name\": \"WT_READ_API\",
+        \"value\": \"https://$ENVIRONMENT-api.windingtree.com\"
+      },
+      {
+        \"name\": \"WT_SEARCH_API\",
+        \"value\": \"https://$ENVIRONMENT-search-api.windingtree.com\"
+      }
+    ],
+    \"image\": \"029479441096.dkr.ecr.$AWS_REGION.amazonaws.com/wt-hotel-explorer:$LATEST_TAG\",
     \"name\": \"wt-hotel-explorer\",
     \"memoryReservation\": 64,
     \"cpu\": 0

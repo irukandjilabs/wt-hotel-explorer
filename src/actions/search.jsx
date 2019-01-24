@@ -42,7 +42,7 @@ const paginatedFetchSearchResults = url => fetch(url)
   });
 
 export const byLocation = createActionThunk('SEARCH_HOTELS_BY_LOCATION', ({ centerCoords, bboxSide }) => {
-  const url = `${process.env.WT_SEARCH_API}/hotels/?location=${centerCoords[0]},${centerCoords[1]}:${bboxSide}&sortByDistance=${centerCoords[0]},${centerCoords[1]}`;
+  const url = `${window.env.WT_SEARCH_API}/hotels/?location=${centerCoords[0]},${centerCoords[1]}:${bboxSide}&sortByDistance=${centerCoords[0]},${centerCoords[1]}`;
   return paginatedFetchSearchResults(url);
 });
 
