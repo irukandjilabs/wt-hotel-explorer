@@ -30,7 +30,7 @@ TASK_DEF="[{\"portMappings\": [{\"hostPort\": 0,\"protocol\": \"tcp\",\"containe
         \"value\": \"https://$ENVIRONMENT-search-api.windingtree.com\"
       }
     ],
-    \"image\": \"029479441096.dkr.ecr.$AWS_REGION.amazonaws.com/wt-hotel-explorer:$LATEST_TAG\",
+    \"image\": \"docker.io/windingtree/wt-hotel-explorer:$LATEST_TAG\",
     \"name\": \"wt-hotel-explorer\",
     \"memoryReservation\": 64,
     \"cpu\": 0
