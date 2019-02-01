@@ -1,5 +1,5 @@
 {
-  "name": "wt-hotel-explorer",
+  "name": "@windingtree/wt-hotel-explorer",
   "version": "0.8.3",
   "description": "Web app to show hotel inventory from WT api.",
   "scripts": {
